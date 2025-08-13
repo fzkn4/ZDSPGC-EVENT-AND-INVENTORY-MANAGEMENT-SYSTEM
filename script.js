@@ -37,6 +37,75 @@
 	// Forms: Add Event
 	const formAddEvent = doc.getElementById('formAddEvent');
 	const eventsList = doc.getElementById('eventsList');
+	const equipmentsInputs = doc.getElementById('equipmentsInputs');
+	const itemsInputs = doc.getElementById('itemsInputs');
+	const btnAddEquipmentRow = doc.getElementById('btnAddEquipmentRow');
+	const btnAddItemRow = doc.getElementById('btnAddItemRow');
+
+	if (btnAddEquipmentRow && equipmentsInputs) {
+		btnAddEquipmentRow.addEventListener('click', function () {
+			addEquipmentRow();
+		});
+	}
+	if (btnAddItemRow && itemsInputs) {
+		btnAddItemRow.addEventListener('click', function () {
+			addItemRow();
+		});
+	}
+
+	function addEquipmentRow() {
+		const row = doc.createElement('div');
+		row.className = 'row g-2 mb-2 equipment-row';
+		row.innerHTML = '' +
+			'<div class="col-6"><input type="text" class="form-control equipment-name" placeholder="e.g., Sound System" /></div>' +
+			'<div class="col-3"><input type="number" min="0" class="form-control equipment-qty" placeholder="Qty" /></div>' +
+			'<div class="col-2"><input type="text" class="form-control equipment-unit" placeholder="Unit" /></div>' +
+			'<div class="col-1 d-grid"><button type="button" class="btn btn-outline-danger remove-row"><i class="bi bi-x"></i></button></div>';
+		equipmentsInputs.appendChild(row);
+		const removeBtn = row.querySelector('.remove-row');
+		if (removeBtn) removeBtn.addEventListener('click', function () { row.remove(); });
+	}
+
+	function addItemRow() {
+		const row = doc.createElement('div');
+		row.className = 'row g-2 mb-2 item-row';
+		row.innerHTML = '' +
+			'<div class="col-6"><input type="text" class="form-control item-name" placeholder="e.g., Chairs" /></div>' +
+			'<div class="col-3"><input type="number" min="0" class="form-control item-qty" placeholder="Qty" /></div>' +
+			'<div class="col-2"><input type="text" class="form-control item-unit" placeholder="Unit" /></div>' +
+			'<div class="col-1 d-grid"><button type="button" class="btn btn-outline-danger remove-row"><i class="bi bi-x"></i></button></div>';
+		itemsInputs.appendChild(row);
+		const removeBtn = row.querySelector('.remove-row');
+		if (removeBtn) removeBtn.addEventListener('click', function () { row.remove(); });
+	}
+
+	function collectEquipmentsFromForm() {
+		var list = [];
+		if (!equipmentsInputs) return list;
+		equipmentsInputs.querySelectorAll('.equipment-row').forEach(function (row) {
+			var name = String((row.querySelector('.equipment-name') || {}).value || '').trim();
+			var qtyStr = String((row.querySelector('.equipment-qty') || {}).value || '').trim();
+			var unit = String((row.querySelector('.equipment-unit') || {}).value || '').trim();
+			if (!name) return;
+			var qty = parseInt(qtyStr || '0', 10) || 0;
+			list.push({ name: name, quantity: qty, unit: unit });
+		});
+		return list;
+	}
+
+	function collectItemsFromForm() {
+		var list = [];
+		if (!itemsInputs) return list;
+		itemsInputs.querySelectorAll('.item-row').forEach(function (row) {
+			var name = String((row.querySelector('.item-name') || {}).value || '').trim();
+			var qtyStr = String((row.querySelector('.item-qty') || {}).value || '').trim();
+			var unit = String((row.querySelector('.item-unit') || {}).value || '').trim();
+			if (!name) return;
+			var qty = parseInt(qtyStr || '0', 10) || 0;
+			list.push({ name: name, quantity: qty, unit: unit });
+		});
+		return list;
+	}
 	if (formAddEvent && eventsList) {
 		formAddEvent.addEventListener('submit', function (e) {
 			e.preventDefault();
@@ -45,6 +114,10 @@
 			const date = data.get('date');
 			const location = data.get('location');
 			const tag = data.get('tag') || 'Info';
+			const equipments = collectEquipmentsFromForm();
+			const items = collectItemsFromForm();
+			const eqAttr = encodeURIComponent(JSON.stringify(equipments));
+			const itAttr = encodeURIComponent(JSON.stringify(items));
 
 			const li = doc.createElement('li');
 			li.className = 'list-group-item d-flex align-items-start justify-content-between';
@@ -54,7 +127,7 @@
 			'</div>' +
 			'<div class="d-flex align-items-center gap-2">' +
 				'<span class="badge text-bg-info">' + escapeHtml(String(tag)) + '</span>' +
-				'<button class="btn btn-sm btn-outline-secondary" data-event-title="' + escapeHtml(String(title)) + '" data-event-date="' + escapeHtml(String(date || '')) + '" data-event-location="' + escapeHtml(String(location || 'TBA')) + '" data-event-tag="' + escapeHtml(String(tag)) + '" data-bs-toggle="modal" data-bs-target="#modalEventDetails"><i class="bi bi-card-text"></i> Details</button>' +
+				'<button class="btn btn-sm btn-outline-secondary" data-event-title="' + escapeHtml(String(title)) + '" data-event-date="' + escapeHtml(String(date || '')) + '" data-event-location="' + escapeHtml(String(location || 'TBA')) + '" data-event-tag="' + escapeHtml(String(tag)) + '" data-event-eq="' + escapeHtml(eqAttr) + '" data-event-it="' + escapeHtml(itAttr) + '" data-bs-toggle="modal" data-bs-target="#modalEventDetails"><i class="bi bi-card-text"></i> Details</button>' +
 			'</div>';
 			eventsList.prepend(li);
 
@@ -286,12 +359,33 @@
 			var date = trigger.getAttribute('data-event-date') || '';
 			var location = trigger.getAttribute('data-event-location') || '';
 			var tag = trigger.getAttribute('data-event-tag') || '';
+			var eqRaw = trigger.getAttribute('data-event-eq') || '';
+			var itRaw = trigger.getAttribute('data-event-it') || '';
+			var equipments = [];
+			var items = [];
+			try { if (eqRaw) equipments = JSON.parse(decodeURIComponent(eqRaw)); } catch (e) { equipments = []; }
+			try { if (itRaw) items = JSON.parse(decodeURIComponent(itRaw)); } catch (e) { items = []; }
 			doc.getElementById('eventDetailsTitle').innerHTML = '<i class="bi bi-card-text me-2"></i>' + escapeHtml(title);
-			doc.getElementById('eventDetailsInfo').innerHTML = '<div>' +
-				'<div class="small"><span class="text-muted">Date:</span> ' + escapeHtml(date) + '</div>' +
-				'<div class="small"><span class="text-muted">Location:</span> ' + escapeHtml(location) + '</div>' +
-				(tag ? '<div class="small"><span class="text-muted">Tag:</span> ' + escapeHtml(tag) + '</div>' : '') +
-			'</div>';
+			doc.getElementById('eventDetailsInfo').innerHTML = '' +
+				'<div class="details-inventory">' +
+					'<div class="mb-2"><span class="text-fixed-red fw-semibold">DATE</span><div class="ms-3 d-inline-block text-fixed-white">&nbsp; ' + escapeHtml(date || '') + '</div></div>' +
+					(location ? '<div class="mb-2"><span class="text-fixed-red fw-semibold">LOCATION</span><div class="ms-3 d-inline-block text-fixed-white">&nbsp; ' + escapeHtml(location) + '</div></div>' : '') +
+					(tag ? '<div class="mb-2"><span class="text-fixed-red fw-semibold">TAG</span><div class="ms-3 d-inline-block text-fixed-white">&nbsp; ' + escapeHtml(tag) + '</div></div>' : '') +
+					'<div class="row g-4 mt-3">' +
+						'<div class="col-12 col-md-6">' +
+							'<div class="text-fixed-red fw-semibold section-title">EQUIPMENTS</div>' +
+							(equipments.length ? '<ul>' + equipments.map(function (e) {
+								return '<li><span class="text-fixed-white">' + escapeHtml(e.name) + '</span>' + (e.quantity ? '<span class="ms-3 text-fixed-white fw-semibold">' + e.quantity + '</span> <span class="text-fixed-white">' + escapeHtml(e.unit || '') + '</span>' : '') + '</li>';
+							}).join('') + '</ul>' : '<div class="text-fixed-white small">None</div>') +
+						'</div>' +
+						'<div class="col-12 col-md-6">' +
+							'<div class="text-fixed-red fw-semibold section-title">ITEMS</div>' +
+							(items.length ? '<ul>' + items.map(function (e) {
+								return '<li><span class="text-fixed-white">' + escapeHtml(e.name) + '</span>' + (e.quantity ? '<span class="ms-3 text-fixed-white fw-semibold">' + e.quantity + '</span> <span class="text-fixed-white">' + escapeHtml(e.unit || '') + '</span>' : '') + '</li>';
+							}).join('') + '</ul>' : '<div class="text-fixed-white small">None</div>') +
+						'</div>' +
+					'</div>' +
+				'</div>';
 			resetAttendanceUI();
 			resetCoverageUI();
 		});

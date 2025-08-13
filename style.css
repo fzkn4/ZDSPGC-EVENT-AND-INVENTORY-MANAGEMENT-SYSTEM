@@ -12,23 +12,54 @@ main.container {
 }
 
 /* Dark mode */
-.theme-dark {
-	background-color: #0b0f19;
-	color: #e8eef8;
+/* Apply a true-black background and force high-contrast white text/icons */
+.theme-dark,
+.theme-dark body {
+	background-color: #000;
+	color: #fff;
 }
-.theme-dark .card {
-	background-color: #101726;
-	color: #e8eef8;
-}
+
+/* General containers and surfaces */
+.theme-dark .card,
 .theme-dark .navbar,
-.theme-dark .modal-content {
-	background-color: #0f1524;
-	color: #e8eef8;
-}
+.theme-dark .modal-content,
 .theme-dark .list-group-item {
-	background-color: #101726;
-	color: #e8eef8;
-	border-color: rgba(255,255,255,0.08);
+	background-color: #000;
+	color: #fff;
+	border-color: rgba(255,255,255,0.15);
+}
+
+/* Override utility backgrounds that enforce white */
+.theme-dark .bg-white,
+.theme-dark .navbar-light.bg-white,
+.theme-dark #bottomTabs {
+	background-color: #000 !important;
+	color: #fff !important;
+	border-color: rgba(255,255,255,0.15) !important;
+}
+
+/* Ensure text elements and icons are white for visibility */
+.theme-dark i,
+.theme-dark .bi,
+.theme-dark label,
+.theme-dark p,
+.theme-dark .small,
+.theme-dark .form-label,
+.theme-dark h1,
+.theme-dark h2,
+.theme-dark h3,
+.theme-dark h4,
+.theme-dark h5,
+.theme-dark h6 {
+	color: #fff !important;
+}
+
+/* Tables and borders */
+.theme-dark .table,
+.theme-dark .table thead th,
+.theme-dark .table tbody td {
+	color: #fff;
+	border-color: rgba(255,255,255,0.15);
 }
 
 /* Mini calendar cells */
@@ -39,8 +70,8 @@ main.container {
 	border: 1px solid rgba(0,0,0,.05);
 }
 .theme-dark #miniCalendar .day-cell {
-	background: #101726;
-	border-color: rgba(255,255,255,0.08);
+	background: #000;
+	border-color: rgba(255,255,255,0.15);
 }
 
 @media (min-width: 768px) {
@@ -57,4 +88,7 @@ main.container {
 	body { background: #fff; }
 	#invoiceContainer { padding: 0; }
 }
+
+/* Force-black icon class used for the search icon */
+.icon-fixed-black { color: #000 !important; }
 

@@ -27,8 +27,17 @@
 					<li class="nav-item me-lg-3">
 						<form class="d-flex" role="search">
 							<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-							<button class="btn btn-light" type="submit"><i class="bi bi-search"></i></button>
+							<button class="btn btn-light" type="submit"><i class="bi bi-search icon-fixed-black"></i></button>
 						</form>
+					</li>
+					<li class="nav-item dropdown me-2">
+						<button class="btn btn-outline-light position-relative" id="btnNotifDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+							<i class="bi bi-bell"></i>
+							<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notifCount">0</span>
+						</button>
+						<ul class="dropdown-menu dropdown-menu-end p-0" aria-labelledby="btnNotifDropdown" id="notifMenu" style="min-width: 320px;">
+							<li class="px-3 py-2 small text-muted" id="notifEmpty">No notifications</li>
+						</ul>
 					</li>
 					<li class="nav-item me-2 d-flex align-items-center">
 						<div class="form-check form-switch text-light">
@@ -50,43 +59,10 @@
 			<div class="col-6 col-md-3">
 				<div class="card shadow-sm h-100">
 					<div class="card-body d-flex align-items-center gap-3">
-						<i class="bi bi-calendar-event fs-3 text-primary"></i>
-						<div>
-							<div class="small text-muted">Upcoming</div>
-							<div class="fs-5 fw-semibold" id="statUpcomingCount">3</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-6 col-md-3">
-				<div class="card shadow-sm h-100">
-					<div class="card-body d-flex align-items-center gap-3">
 						<i class="bi bi-check2-square fs-3 text-success"></i>
 						<div>
 							<div class="small text-muted">Completed</div>
 							<div class="fs-5 fw-semibold" id="statCompletedCount">1</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-6 col-md-3">
-				<div class="card shadow-sm h-100">
-					<div class="card-body d-flex align-items-center gap-3">
-						<i class="bi bi-box-seam fs-3 text-warning"></i>
-						<div>
-							<div class="small text-muted">Items</div>
-							<div class="fs-5 fw-semibold" id="statItemsCount">5</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-6 col-md-3">
-				<div class="card shadow-sm h-100">
-					<div class="card-body d-flex align-items-center gap-3">
-						<i class="bi bi-exclamation-triangle fs-3 text-danger"></i>
-						<div>
-							<div class="small text-muted">Low Stock</div>
-							<div class="fs-5 fw-semibold" id="statLowStockCount">2</div>
 						</div>
 					</div>
 				</div>
@@ -240,6 +216,12 @@
 					</button>
 				</li>
 				<li class="nav-item" role="presentation">
+					<button class="nav-link d-flex flex-column align-items-center" id="tab-attendance-btn" data-bs-toggle="tab" data-bs-target="#tab-attendance" type="button" role="tab" aria-controls="tab-attendance" aria-selected="false">
+						<i class="bi bi-people-check fs-5"></i>
+						<span class="small">Attendance</span>
+					</button>
+				</li>
+				<li class="nav-item" role="presentation">
 					<button class="nav-link d-flex flex-column align-items-center" id="tab-calendar-btn" data-bs-toggle="tab" data-bs-target="#tab-calendar" type="button" role="tab" aria-controls="tab-calendar" aria-selected="false">
 						<i class="bi bi-calendar-week fs-5"></i>
 						<span class="small">Calendar</span>
@@ -258,6 +240,36 @@
 			<ul class="list-group" id="invoicesList">
 				<li class="list-group-item small text-muted" id="invoicesEmpty">No invoices yet.</li>
 			</ul>
+		</section>
+
+		<!-- Attendance Tab -->
+		<section class="tab-pane fade" id="tab-attendance" role="tabpanel" aria-labelledby="tab-attendance-btn">
+			<div class="d-flex align-items-center justify-content-between mb-2">
+				<h2 class="h5 mb-0"><i class="bi bi-people-check me-2"></i>Attendance Tracker</h2>
+				<div class="d-flex gap-2">
+					<button class="btn btn-outline-secondary" id="btnExportAttendance"><i class="bi bi-download me-1"></i>Export</button>
+					<button class="btn btn-outline-danger" id="btnClearAttendance"><i class="bi bi-trash me-1"></i>Clear</button>
+				</div>
+			</div>
+			<div class="row g-2 align-items-end">
+				<div class="col-12 col-md-4">
+					<label class="form-label" for="attNameAll">Name</label>
+					<input type="text" class="form-control" id="attNameAll" placeholder="Full name" />
+				</div>
+				<div class="col-12 col-md-4">
+					<label class="form-label" for="attIdAll">ID</label>
+					<input type="text" class="form-control" id="attIdAll" placeholder="Student/Employee ID" />
+				</div>
+				<div class="col-12 col-md-4">
+					<button class="btn btn-primary w-100" id="btnCheckInAll"><i class="bi bi-person-check me-1"></i>Check-in</button>
+				</div>
+			</div>
+			<div class="mt-3">
+				<h6 class="mb-2">Records</h6>
+				<ul class="list-group" id="attendanceAllList">
+					<li class="list-group-item small text-muted" id="attendanceAllEmpty">No attendees yet.</li>
+				</ul>
+			</div>
 		</section>
 	</div>
 
@@ -296,6 +308,29 @@
 						<div class="mb-3">
 							<label for="eventDesc" class="form-label">Description</label>
 							<textarea class="form-control" id="eventDesc" name="description" rows="3" placeholder="Optional"></textarea>
+						</div>
+						<hr />
+						<div class="mb-3">
+							<label class="form-label">Equipments</label>
+							<div id="equipmentsInputs">
+								<div class="row g-2 mb-2 equipment-row">
+									<div class="col-6"><input type="text" class="form-control equipment-name" placeholder="e.g., Sound System" /></div>
+									<div class="col-3"><input type="number" min="0" class="form-control equipment-qty" placeholder="Qty" /></div>
+									<div class="col-3"><input type="text" class="form-control equipment-unit" placeholder="Unit (e.g., UNITS)" /></div>
+								</div>
+							</div>
+							<button class="btn btn-sm btn-outline-primary" type="button" id="btnAddEquipmentRow"><i class="bi bi-plus-lg"></i> Add Equipment</button>
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Items</label>
+							<div id="itemsInputs">
+								<div class="row g-2 mb-2 item-row">
+									<div class="col-6"><input type="text" class="form-control item-name" placeholder="e.g., Chairs" /></div>
+									<div class="col-3"><input type="number" min="0" class="form-control item-qty" placeholder="Qty" /></div>
+									<div class="col-3"><input type="text" class="form-control item-unit" placeholder="Unit (e.g., PCS)" /></div>
+								</div>
+							</div>
+							<button class="btn btn-sm btn-outline-primary" type="button" id="btnAddItemRow"><i class="bi bi-plus-lg"></i> Add Item</button>
 						</div>
 					</div>
 					<div class="modal-footer">
