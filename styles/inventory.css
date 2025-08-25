@@ -1,0 +1,301 @@
+/* Inventory-specific styles */
+
+/* Inventory Statistics Cards */
+.inventory-stats {
+  margin-bottom: 2rem;
+}
+
+.inv-stat-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.inv-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.inv-stat-card .stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin: 0 auto 1rem;
+}
+
+.inv-stat-card .stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.inv-stat-card .stat-label {
+  color: #6c757d;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Filters and Search */
+.inventory-filters {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.filter-group {
+  margin-bottom: 1rem;
+}
+
+.filter-group:last-child {
+  margin-bottom: 0;
+}
+
+.filter-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* Inventory Table */
+.inventory-table-container {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.inventory-table {
+  margin: 0;
+}
+
+.inventory-table th {
+  background: #f8f9fa;
+  border: none;
+  padding: 1rem;
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.inventory-table td {
+  border: none;
+  border-bottom: 1px solid #f1f3f4;
+  padding: 1rem;
+  vertical-align: middle;
+}
+
+.inventory-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.item-name {
+  font-weight: 600;
+  color: #212529;
+}
+
+.item-category {
+  background: #e9ecef;
+  color: #495057;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.item-location {
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+.item-quantity {
+  font-weight: 600;
+  color: #212529;
+}
+
+.item-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.item-status.available {
+  background: #d1e7dd;
+  color: #0f5132;
+}
+
+.item-status.low-stock {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.item-status.out-of-stock {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Active Loans Table */
+.loans-table-container {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.loans-table {
+  margin: 0;
+}
+
+.loans-table th {
+  background: #f8f9fa;
+  border: none;
+  padding: 1rem;
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.loans-table td {
+  border: none;
+  border-bottom: 1px solid #f1f3f4;
+  padding: 1rem;
+  vertical-align: middle;
+}
+
+.loans-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.loan-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.loan-status.active {
+  background: #cce5ff;
+  color: #004085;
+}
+
+.loan-status.overdue {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.loan-status.returned {
+  background: #d1e7dd;
+  color: #0f5132;
+}
+
+/* Action Buttons */
+.inventory-actions {
+  margin-bottom: 2rem;
+}
+
+.action-button {
+  border-radius: 8px;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.action-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Search and Filter Enhancements */
+.search-box {
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  transition: border-color 0.3s ease;
+}
+
+.search-box:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.filter-select {
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  transition: border-color 0.3s ease;
+}
+
+.filter-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Inventory Animations */
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.inventory-stats .inv-stat-card {
+  animation: fadeInLeft 0.6s ease;
+}
+
+.inventory-stats .inv-stat-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.inventory-stats .inv-stat-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.inventory-stats .inv-stat-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.inventory-stats .inv-stat-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .inv-stat-card {
+    margin-bottom: 1rem;
+  }
+
+  .inventory-filters {
+    margin-bottom: 1.5rem;
+  }
+
+  .inventory-table-container,
+  .loans-table-container {
+    margin-bottom: 1.5rem;
+  }
+
+  .inventory-table th,
+  .inventory-table td,
+  .loans-table th,
+  .loans-table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.875rem;
+  }
+}
