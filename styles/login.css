@@ -1,0 +1,9 @@
+#togglePassword {
+  outline: none !important;
+  box-shadow: none !important;
+}
+#togglePassword:hover,
+#togglePassword:active,
+#togglePassword:focus {
+  background-color: transparent !important;
+}

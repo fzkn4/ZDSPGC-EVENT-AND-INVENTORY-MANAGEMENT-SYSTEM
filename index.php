@@ -10,7 +10,7 @@
 	<!-- Bootstrap Icons -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
 	<!-- Local styles -->
-	<link href="style.css" rel="stylesheet" />
+	<link href="styles/style.css" rel="stylesheet" />
 </head>
 <body>
 	<header class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -530,7 +530,7 @@
 	</div>
 
 	<!-- Scripts -->
-	<script src="script.js"></script>
+	<script src="scripts/script.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
  	<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 </body>

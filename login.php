@@ -13,7 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
-	<link href="style.css" rel="stylesheet" />
+	<link href="styles/style.css" rel="stylesheet" />
+	<link href="styles/login.css" rel="stylesheet" />
 </head>
 <body class="bg-light">
 	<div class="container py-5">
@@ -49,34 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	</div>
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-	<style>
-		#togglePassword{
-			outline: none !important;
-			box-shadow: none !important;
-		}
-		#togglePassword:hover,
-		#togglePassword:active,
-		#togglePassword:focus{
-			background-color: transparent !important;
-		}
-	</style>
-    <script>
-    (function() {
-        var toggleBtn = document.getElementById('togglePassword');
-        var passwordInput = document.getElementById('password');
-        if (!toggleBtn || !passwordInput) return;
-        toggleBtn.addEventListener('click', function () {
-            var isHidden = passwordInput.getAttribute('type') === 'password';
-            passwordInput.setAttribute('type', isHidden ? 'text' : 'password');
-            var icon = this.querySelector('i');
-            if (icon) {
-                icon.classList.toggle('bi-eye');
-                icon.classList.toggle('bi-eye-slash');
-            }
-            this.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
-        });
-    })();
-    </script>
+	<script src="scripts/login.js"></script>
 </body>
 </html>
 

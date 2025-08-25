@@ -1,0 +1,113 @@
+/* Custom tweaks for mobile-first UI */
+body {
+  background-color: #f6f8fb;
+}
+
+main.container {
+  padding-bottom: 4.5rem; /* space for bottom nav */
+}
+
+#bottomTabs .nav-link {
+  border-radius: 0;
+}
+
+/* Dark mode */
+/* Apply a true-black background and force high-contrast white text/icons */
+.theme-dark,
+.theme-dark body {
+  background-color: #000;
+  color: #fff;
+}
+
+/* General containers and surfaces */
+.theme-dark .card,
+.theme-dark .navbar,
+.theme-dark .modal-content,
+.theme-dark .list-group-item {
+  background-color: #000;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Override utility backgrounds that enforce white */
+.theme-dark .bg-white,
+.theme-dark .navbar-light.bg-white,
+.theme-dark #bottomTabs {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Ensure text elements and icons are white for visibility */
+.theme-dark i,
+.theme-dark .bi,
+.theme-dark label,
+.theme-dark p,
+.theme-dark .small,
+.theme-dark .form-label,
+.theme-dark h1,
+.theme-dark h2,
+.theme-dark h3,
+.theme-dark h4,
+.theme-dark h5,
+.theme-dark h6 {
+  color: #fff !important;
+}
+
+/* Tables and borders */
+.theme-dark .table,
+.theme-dark .table thead th,
+.theme-dark .table tbody td {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Mini calendar cells */
+#miniCalendar .day-cell {
+  padding: 0.5rem 0;
+  border-radius: 0.5rem;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+.theme-dark #miniCalendar .day-cell {
+  background: #000;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+@media (min-width: 768px) {
+  #bottomTabs {
+    display: none;
+  }
+}
+
+/* Admin-only visibility helper */
+.requires-admin {
+  display: none;
+}
+.admin-mode .requires-admin {
+  display: initial;
+}
+
+/* Print styles for invoice */
+@media print {
+  #bottomTabs,
+  header,
+  .navbar,
+  .modal-footer,
+  .btn,
+  .nav,
+  .toast-container {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
+  #invoiceContainer {
+    padding: 0;
+  }
+}
+
+/* Force-black icon class used for the search icon */
+.icon-fixed-black {
+  color: #000 !important;
+}
