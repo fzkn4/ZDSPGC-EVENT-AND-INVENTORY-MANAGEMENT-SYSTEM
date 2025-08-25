@@ -1,22 +1,8 @@
 (function () {
   const doc = document;
 
-  // Theme toggle
-  const themeToggleBtn = doc.getElementById("btnThemeToggle");
+  // Removed dark theme toggle
   const root = doc.documentElement;
-  const storedTheme = localStorage.getItem("eims-theme");
-  if (storedTheme === "dark") {
-    root.classList.add("theme-dark");
-  }
-  if (themeToggleBtn) {
-    themeToggleBtn.addEventListener("click", function () {
-      root.classList.toggle("theme-dark");
-      localStorage.setItem(
-        "eims-theme",
-        root.classList.contains("theme-dark") ? "dark" : "light"
-      );
-    });
-  }
 
   // Admin mode toggle
   const adminSwitch = doc.getElementById("adminModeSwitch");

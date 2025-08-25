@@ -45,9 +45,6 @@
 							<label class="form-check-label small" for="adminModeSwitch">Admin</label>
 						</div>
 					</li>
-					<li class="nav-item">
-						<button class="btn btn-outline-light" id="btnThemeToggle" type="button"><i class="bi bi-moon-stars"></i></button>
-					</li>
 				</ul>
 			</div>
 		</div>
