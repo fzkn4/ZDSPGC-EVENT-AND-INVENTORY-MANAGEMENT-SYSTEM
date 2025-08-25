@@ -9,6 +9,9 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
 	<!-- Bootstrap Icons -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+	<!-- Flaticon Icons -->
+	<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+	<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
 	<!-- Local styles -->
 	<link href="styles/style.css" rel="stylesheet" />
 </head>
@@ -19,38 +22,32 @@
 				<i class="bi bi-grid-1x2-fill"></i>
 				<span class="fw-semibold">ZDSPGC EIMS</span>
 			</a>
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="mainNavbar">
-				<ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
-					<li class="nav-item me-lg-3">
-						<form class="d-flex" role="search">
-							<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-							<button class="btn btn-light" type="submit"><i class="bi bi-search icon-fixed-black"></i></button>
-						</form>
-					</li>
-					<li class="nav-item dropdown me-2">
-						<button class="btn btn-outline-light position-relative" id="btnNotifDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-							<i class="bi bi-bell"></i>
-							<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notifCount">0</span>
-						</button>
-						<ul class="dropdown-menu dropdown-menu-end p-0" aria-labelledby="btnNotifDropdown" id="notifMenu" style="min-width: 320px;">
-							<li class="px-3 py-2 small text-muted" id="notifEmpty">No notifications</li>
-						</ul>
-					</li>
-					<li class="nav-item me-2 d-flex align-items-center">
-						<div class="form-check form-switch text-light">
-							<input class="form-check-input" type="checkbox" role="switch" id="adminModeSwitch" />
-							<label class="form-check-label small" for="adminModeSwitch">Admin</label>
-						</div>
-					</li>
-				</ul>
-			</div>
+			<ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+				<li class="nav-item dropdown me-2">
+					<button class="btn btn-outline-light position-relative" id="btnNotifDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+						<i class="bi bi-bell"></i>
+						<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notifCount">0</span>
+					</button>
+					<ul class="dropdown-menu dropdown-menu-end p-0" aria-labelledby="btnNotifDropdown" id="notifMenu" style="min-width: 320px;">
+						<li class="px-3 py-2 small text-muted" id="notifEmpty">No notifications</li>
+					</ul>
+				</li>
+			</ul>
 		</div>
 	</header>
 
-	<main class="container py-3 py-md-4">
+	<div class="container-fluid">
+		<div class="row">
+			<!-- Sidebar -->
+			<aside class="col-12 col-md-3 col-lg-3 py-3 sidebar" id="dashboardSidebar">
+				<ul class="list-unstyled sidebar-menu px-2 mb-3">
+					<li><a href="dashboard.php" class="menu-link d-flex align-items-center gap-2"><i class="fi fi-br-dashboard-panel unfilled-icon"></i><i class="fi fi-sr-dashboard-panel filled-icon"></i><span>Dashboard</span></a></li>
+					<li><a href="index.php" class="menu-link active d-flex align-items-center gap-2"><i class="fi fi-br-calendar unfilled-icon"></i><i class="fi fi-sr-calendar filled-icon"></i><span>Events</span></a></li>
+					<li><a href="inventory.php" class="menu-link d-flex align-items-center gap-2"><i class="fi fi-br-box unfilled-icon"></i><i class="fi fi-sr-box filled-icon"></i><span>Inventory</span></a></li>
+				</ul>
+			</aside>
+
+			<main class="col-12 col-md-9 col-lg-9 py-3 py-md-4 page-content">
 		<!-- Dashboard Summary -->
 		<section class="row g-3 mb-2" id="dashboardSummary">
 			<div class="col-6 col-md-3">
@@ -188,7 +185,9 @@
 				</div>
 			</section>
 		</div>
-	</main>
+			</main>
+		</div>
+	</div>
 
 	<!-- Bottom Mobile Tabs -->
 	<nav class="navbar fixed-bottom navbar-light bg-white border-top shadow-sm" id="bottomTabs">

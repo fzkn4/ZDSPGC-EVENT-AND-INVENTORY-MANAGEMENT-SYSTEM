@@ -7,6 +7,170 @@ main.container {
   padding-bottom: 4.5rem; /* space for bottom nav */
 }
 
+/* Main layout container */
+.container-fluid .row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
+
+/* Sidebar */
+.sidebar {
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+  background: #fff;
+  min-height: calc(100vh - 56px);
+  max-width: 280px;
+  flex-shrink: 0;
+}
+.sidebar .xsmall {
+  font-size: 0.72rem;
+}
+
+.sidebar-menu .menu-link {
+  display: block;
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  color: #111;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-menu .menu-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(13, 110, 253, 0.1),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.sidebar-menu .menu-link:hover::before {
+  left: 100%;
+}
+
+.sidebar-menu .menu-link i {
+  width: 20px;
+  text-align: center;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.sidebar-menu .menu-link:hover {
+  background: #f1f4f9;
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-menu .menu-link:hover i {
+  transform: scale(1.1);
+}
+
+.sidebar-menu .menu-link.active {
+  color: #0d6efd;
+  background: rgba(13, 110, 253, 0.08);
+  border: 1px solid rgba(13, 110, 253, 0.2);
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15);
+}
+
+.sidebar-menu .menu-link.active i {
+  transform: scale(1.1);
+}
+
+/* Filled icon styles for active menu items */
+.sidebar-menu .menu-link.active .fi-br-dashboard-panel::before {
+  content: "\f1b0"; /* Dashboard filled */
+}
+
+.sidebar-menu .menu-link.active .fi-br-calendar::before {
+  content: "\f1b1"; /* Calendar filled */
+}
+
+.sidebar-menu .menu-link.active .fi-br-box::before {
+  content: "\f1b2"; /* Box filled */
+}
+
+/* Icon switching for active menu items */
+.sidebar-menu .menu-link .filled-icon {
+  display: none;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-menu .menu-link.active .unfilled-icon {
+  display: none;
+  opacity: 0;
+}
+
+.sidebar-menu .menu-link.active .filled-icon {
+  display: inline-block;
+  opacity: 1;
+  animation: fadeInScale 0.3s ease;
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Page transition effects */
+.page-content {
+  animation: fadeInUp 0.4s ease;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Loading state for menu items */
+.sidebar-menu .menu-link.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.sidebar-menu .menu-link.loading i {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.section-label {
+  letter-spacing: 0.06em;
+  font-size: 0.72rem;
+}
+
 #bottomTabs .nav-link {
   border-radius: 0;
 }

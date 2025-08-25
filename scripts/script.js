@@ -748,3 +748,59 @@
   // Initial low stock compute
   updateLowStockBadge();
 })();
+
+// Sidebar Navigation with Smooth Transitions
+document.addEventListener("DOMContentLoaded", function () {
+  const sidebarLinks = document.querySelectorAll(".sidebar-menu .menu-link");
+
+  sidebarLinks.forEach((link) => {
+    link.addEventListener("click", function (e) {
+      // Only handle internal navigation (not external links)
+      if (this.href && this.href.includes(window.location.origin)) {
+        e.preventDefault();
+
+        const targetUrl = this.href;
+        const clickedLink = this;
+
+        // Add loading state
+        clickedLink.classList.add("loading");
+
+        // Add page transition effect
+        const mainContent = document.querySelector("main");
+        if (mainContent) {
+          mainContent.style.opacity = "0";
+          mainContent.style.transform = "translateY(20px)";
+          mainContent.style.transition = "all 0.3s ease";
+        }
+
+        // Simulate loading delay for better UX
+        setTimeout(() => {
+          // Remove loading state from all links
+          sidebarLinks.forEach((link) => link.classList.remove("loading"));
+
+          // Navigate to the target page
+          window.location.href = targetUrl;
+        }, 300);
+      }
+    });
+
+    // Add hover effects
+    link.addEventListener("mouseenter", function () {
+      if (!this.classList.contains("active")) {
+        this.style.transform = "translateX(4px)";
+      }
+    });
+
+    link.addEventListener("mouseleave", function () {
+      if (!this.classList.contains("active")) {
+        this.style.transform = "translateX(0)";
+      }
+    });
+  });
+
+  // Add page content animation on load
+  const mainContent = document.querySelector("main");
+  if (mainContent) {
+    mainContent.classList.add("page-content");
+  }
+});
