@@ -1,13 +1,56 @@
 // Dashboard-specific JavaScript functionality
 
 document.addEventListener("DOMContentLoaded", function () {
+  // Ensure dashboard is the main focus
+  console.log("Dashboard loading...");
+
   // Initialize dashboard components
   initializeDashboardStats();
   initializeQuickActions();
   initializeUpcomingEvents();
   initializeRecentActivity();
   initializeDashboardAnimations();
+
+  // Ensure dashboard content is visible
+  showDashboardContent();
 });
+
+// Show dashboard content as primary focus
+function showDashboardContent() {
+  // Hide any event-related content that might be showing
+  const eventSections = document.querySelectorAll(".tab-pane, #tab-events");
+  eventSections.forEach((section) => {
+    if (section) {
+      section.style.display = "none";
+    }
+  });
+
+  // Ensure dashboard sections are visible
+  const dashboardSections = document.querySelectorAll(
+    ".dashboard-section, .card, .row"
+  );
+  dashboardSections.forEach((section) => {
+    if (section) {
+      section.style.display = "";
+    }
+  });
+
+  // Ensure main dashboard content is visible
+  const mainContent = document.querySelector(".dashboard-main");
+  if (mainContent) {
+    mainContent.style.display = "block";
+    mainContent.style.opacity = "1";
+    mainContent.style.transform = "none";
+  }
+
+  // Update page title to reflect dashboard
+  document.title = "Dashboard - ZDSPGC Event & Inventory Management System";
+
+  // Add dashboard-specific class to body
+  document.body.classList.add("dashboard-page");
+
+  console.log("Dashboard content displayed successfully");
+}
 
 // Dashboard Statistics
 function initializeDashboardStats() {
@@ -93,7 +136,7 @@ function handleQuickAction(action) {
       break;
     case "view-calendar":
       // Navigate to calendar view
-      window.location.href = "index.php#tab-calendar";
+      window.location.href = "index.php";
       break;
     case "generate-report":
       // Generate dashboard report
@@ -308,6 +351,11 @@ function showToast(message, type = "info") {
   });
 }
 
+// Logout function (redirects to PHP logout)
+function logout() {
+  window.location.href = "?logout=1";
+}
+
 // Export functions for potential use in other scripts
 window.Dashboard = {
   updateStatistics,
@@ -315,4 +363,5 @@ window.Dashboard = {
   loadRecentActivity,
   generateDashboardReport,
   showToast,
+  logout,
 };

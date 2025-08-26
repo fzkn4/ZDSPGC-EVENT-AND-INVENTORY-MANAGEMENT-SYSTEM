@@ -1,3 +1,21 @@
+<?php
+require_once 'auth.php';
+
+// Require authentication
+requireAuth();
+
+// Get current user data
+$currentUser = getCurrentUser();
+$sessionData = getSessionData();
+
+// Handle logout
+if (isset($_GET['logout'])) {
+    $auth->logout();
+}
+
+// Handle access denied error
+$error = $_GET['error'] ?? '';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,24 +34,53 @@
 	<link href="styles/style.css" rel="stylesheet" />
 	<link href="styles/dashboard.css" rel="stylesheet" />
 </head>
-<body>
-	<header class="navbar navbar-expand-lg navbar-dark bg-primary">
+<body class="user-<?php echo htmlspecialchars($sessionData['user_type']); ?>">
+	<!-- Background Animation -->
+	<div class="app-background">
+		<div class="floating-shapes">
+			<div class="shape shape-1"></div>
+			<div class="shape shape-2"></div>
+			<div class="shape shape-3"></div>
+			<div class="shape shape-4"></div>
+			<div class="shape shape-5"></div>
+		</div>
+	</div>
+	
+	<header class="navbar navbar-expand-lg">
 		<div class="container-fluid">
-			<a class="navbar-brand d-flex align-items-center gap-2" href="index.php">
+			<a class="navbar-brand d-flex align-items-center gap-2" href="dashboard.php">
 				<i class="bi bi-grid-1x2-fill"></i>
 				<span class="fw-semibold">ZDSPGC EIMS</span>
 			</a>
-			<ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
-				<li class="nav-item dropdown me-2">
-					<button class="btn btn-outline-light position-relative" id="btnNotifDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-						<i class="bi bi-bell"></i>
-						<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notifCount">0</span>
-					</button>
-					<ul class="dropdown-menu dropdown-menu-end p-0" aria-labelledby="btnNotifDropdown" id="notifMenu" style="min-width: 320px;">
-						<li class="px-3 py-2 small text-muted" id="notifEmpty">No notifications</li>
-					</ul>
-				</li>
-			</ul>
+			
+			<!-- Mobile Navigation Toggle -->
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			
+			<!-- Navigation Content -->
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+					<li class="nav-item dropdown">
+						<button class="btn btn-outline-light d-flex align-items-center gap-2" id="btnUserDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+							<i class="bi bi-person-circle"></i>
+							<span id="userDisplayName"><?php echo htmlspecialchars($sessionData['user_name']); ?></span>
+							<i class="bi bi-chevron-down"></i>
+						</button>
+						<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="btnUserDropdown">
+							<li><span class="dropdown-item-text small text-muted" id="userEmail"><?php echo htmlspecialchars($sessionData['user_email']); ?></span></li>
+							<?php if ($sessionData['student_id']): ?>
+							<li><span class="dropdown-item-text small text-muted">Student ID: <?php echo htmlspecialchars($sessionData['student_id']); ?></span></li>
+							<?php endif; ?>
+							<li><hr class="dropdown-divider"></li>
+							<li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Profile</a></li>
+							<li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Settings</a></li>
+							<li><hr class="dropdown-divider"></li>
+							<li><a class="dropdown-item text-danger" href="?logout=1"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
 		</div>
 	</header>
 
@@ -48,186 +95,133 @@
 				</ul>
 			</aside>
 
-			<main class="col-12 col-md-9 col-lg-9 py-3 py-md-4 page-content">
-				<!-- Page Header -->
-				<div class="d-flex align-items-center justify-content-between mb-4">
-					<div>
-						<h1 class="h3 mb-1">Dashboard</h1>
-						<p class="text-muted mb-0">Welcome to ZDSPGC Event & Inventory Management System</p>
-					</div>
-					<div class="d-flex gap-2">
-						<button class="btn btn-outline-primary" onclick="window.location.href='index.php'">
-							<i class="bi bi-calendar-event me-1"></i>View Events
-						</button>
-						<button class="btn btn-outline-primary" onclick="window.location.href='inventory.php'">
-							<i class="bi bi-box-seam me-1"></i>View Inventory
-						</button>
+			<main class="col-12 col-md-9 col-lg-9 py-3 py-md-4 page-content dashboard-main">
+				<!-- Error Messages -->
+				<?php if ($error === 'access_denied'): ?>
+				<div class="alert alert-warning alert-dismissible fade show mb-4" role="alert">
+					<i class="bi bi-exclamation-triangle me-2"></i>
+					<strong>Access Denied!</strong> You don't have permission to access that page.
+					<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+				</div>
+				<?php endif; ?>
+
+				<!-- Welcome Section -->
+				<div class="welcome-section mb-4">
+					<div class="welcome-content">
+						<h1 class="welcome-title">Welcome back, <?php echo htmlspecialchars($sessionData['user_name']); ?>!</h1>
+						<p class="welcome-subtitle">Here's what's happening in your ZDSPGC Event & Inventory Management System</p>
 					</div>
 				</div>
 
-				<!-- Statistics Cards -->
-				<div class="row g-3 mb-4">
-					<div class="col-6 col-md-3">
-						<div class="card shadow-sm h-100">
-							<div class="card-body d-flex align-items-center gap-3">
-								<i class="bi bi-calendar-event fs-3 text-primary"></i>
-								<div>
-									<div class="small text-muted">Total Events</div>
-									<div class="fs-5 fw-semibold" id="statTotalEvents">12</div>
+				<!-- Statistics Cards and Quick Actions Row -->
+				<div class="dashboard-row mb-4">
+					<!-- Statistics Cards -->
+					<div class="dashboard-stats">
+						<div class="stats-grid">
+							<div class="stat-card">
+								<div class="stat-icon">
+									<i class="bi bi-calendar-event"></i>
 								</div>
+								<div class="stat-number" id="statTotalEvents">12</div>
+								<div class="stat-label">Total Events</div>
+							</div>
+							<div class="stat-card">
+								<div class="stat-icon">
+									<i class="bi bi-check2-square"></i>
+								</div>
+								<div class="stat-number" id="statCompletedCount">8</div>
+								<div class="stat-label">Completed</div>
+							</div>
+							<div class="stat-card">
+								<div class="stat-icon">
+									<i class="bi bi-box-seam"></i>
+								</div>
+								<div class="stat-number" id="statInventoryItems">45</div>
+								<div class="stat-label">Inventory Items</div>
+							</div>
+							<div class="stat-card">
+								<div class="stat-icon">
+									<i class="bi bi-arrow-left-right"></i>
+								</div>
+								<div class="stat-number" id="statActiveLoans">3</div>
+								<div class="stat-label">Active Loans</div>
 							</div>
 						</div>
 					</div>
-					<div class="col-6 col-md-3">
-						<div class="card shadow-sm h-100">
-							<div class="card-body d-flex align-items-center gap-3">
-								<i class="bi bi-check2-square fs-3 text-success"></i>
-								<div>
-									<div class="small text-muted">Completed</div>
-									<div class="fs-5 fw-semibold" id="statCompletedCount">8</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-6 col-md-3">
-						<div class="card shadow-sm h-100">
-							<div class="card-body d-flex align-items-center gap-3">
-								<i class="bi bi-box-seam fs-3 text-warning"></i>
-								<div>
-									<div class="small text-muted">Inventory Items</div>
-									<div class="fs-5 fw-semibold" id="statInventoryItems">45</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-6 col-md-3">
-						<div class="card shadow-sm h-100">
-							<div class="card-body d-flex align-items-center gap-3">
-								<i class="bi bi-arrow-left-right fs-3 text-info"></i>
-								<div>
-									<div class="small text-muted">Active Loans</div>
-									<div class="fs-5 fw-semibold" id="statActiveLoans">3</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
 
-				<!-- Quick Actions -->
-				<div class="row g-3 mb-4">
-					<div class="col-12">
-						<div class="card shadow-sm">
-							<div class="card-header bg-light">
-								<h5 class="card-title mb-0"><i class="bi bi-lightning me-2"></i>Quick Actions</h5>
-							</div>
-							<div class="card-body">
-								<div class="row g-3">
-									<div class="col-6 col-md-3">
-										<button class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3" onclick="window.location.href='index.php'">
-											<i class="bi bi-plus-circle fs-2 mb-2"></i>
-											<span>Add Event</span>
-										</button>
-									</div>
-									<div class="col-6 col-md-3">
-										<button class="btn btn-outline-success w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3" onclick="window.location.href='inventory.php'">
-											<i class="bi bi-box-seam fs-2 mb-2"></i>
-											<span>Add Item</span>
-										</button>
-									</div>
-									<div class="col-6 col-md-3">
-										<button class="btn btn-outline-info w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3" onclick="window.location.href='inventory.php'">
-											<i class="bi bi-arrow-left-right fs-2 mb-2"></i>
-											<span>Borrow Item</span>
-										</button>
-									</div>
-									<div class="col-6 col-md-3">
-										<button class="btn btn-outline-warning w-100 h-100 d-flex flex-column align-items-center justify-content-center p-3" onclick="window.location.href='index.php'">
-											<i class="bi bi-people-check fs-2 mb-2"></i>
-											<span>Attendance</span>
-										</button>
-									</div>
-								</div>
-							</div>
+					<!-- Quick Actions -->
+					<div class="quick-actions">
+						<div class="actions-grid">
+							<a href="index.php" class="action-btn">
+								<i class="bi bi-plus-circle action-icon"></i>
+								<span class="action-text">Add Event</span>
+							</a>
+							<a href="inventory.php" class="action-btn">
+								<i class="bi bi-box-seam action-icon"></i>
+								<span class="action-text">Add Item</span>
+							</a>
+							<a href="inventory.php" class="action-btn">
+								<i class="bi bi-arrow-left-right action-icon"></i>
+								<span class="action-text">Borrow Item</span>
+							</a>
+							<a href="index.php" class="action-btn">
+								<i class="bi bi-people-check action-icon"></i>
+								<span class="action-text">Attendance</span>
+							</a>
 						</div>
 					</div>
 				</div>
 
 				<!-- Recent Activity & Upcoming Events -->
-				<div class="row g-3">
+				<div class="dashboard-grid">
 					<!-- Upcoming Events -->
-					<div class="col-12 col-lg-6">
-						<div class="card shadow-sm h-100">
-							<div class="card-header bg-light d-flex align-items-center justify-content-between">
-								<h5 class="card-title mb-0"><i class="bi bi-calendar-event me-2"></i>Upcoming Events</h5>
-								<a href="index.php" class="btn btn-sm btn-outline-primary">View All</a>
-							</div>
-							<div class="card-body">
-								<div class="list-group list-group-flush">
-									<div class="list-group-item d-flex align-items-start justify-content-between border-0 px-0">
-										<div>
-											<div class="fw-semibold">Orientation Day</div>
-											<div class="small text-muted">Main Hall • 2025-09-01</div>
-										</div>
-										<span class="badge text-bg-info">Campus</span>
-									</div>
-									<div class="list-group-item d-flex align-items-start justify-content-between border-0 px-0">
-										<div>
-											<div class="fw-semibold">Tech Innovation Fair</div>
-											<div class="small text-muted">Gymnasium • 2025-10-12</div>
-										</div>
-										<span class="badge text-bg-warning">Public</span>
-									</div>
-									<div class="list-group-item d-flex align-items-start justify-content-between border-0 px-0">
-										<div>
-											<div class="fw-semibold">Faculty Workshop</div>
-											<div class="small text-muted">Room B203 • 2025-08-25</div>
-										</div>
-										<span class="badge text-bg-success">Internal</span>
-									</div>
-								</div>
-							</div>
+					<div class="upcoming-events">
+						<h5 class="card-title mb-3"><i class="bi bi-calendar-event me-2"></i>Upcoming Events</h5>
+						<div class="event-item">
+							<div class="event-title">Orientation Day</div>
+							<div class="event-date">Main Hall • 2025-09-01</div>
+							<div class="event-location">Campus Event</div>
+						</div>
+						<div class="event-item">
+							<div class="event-title">Tech Innovation Fair</div>
+							<div class="event-date">Gymnasium • 2025-10-12</div>
+							<div class="event-location">Public Event</div>
+						</div>
+						<div class="event-item">
+							<div class="event-title">Faculty Workshop</div>
+							<div class="event-date">Room B203 • 2025-08-25</div>
+							<div class="event-location">Internal Event</div>
 						</div>
 					</div>
 
 					<!-- Recent Activity -->
-					<div class="col-12 col-lg-6">
-						<div class="card shadow-sm h-100">
-							<div class="card-header bg-light">
-								<h5 class="card-title mb-0"><i class="bi bi-activity me-2"></i>Recent Activity</h5>
+					<div class="recent-activity">
+						<h5 class="card-title mb-3"><i class="bi bi-activity me-2"></i>Recent Activity</h5>
+						<div class="activity-item">
+							<div class="activity-icon">
+								<i class="bi bi-calendar-plus"></i>
 							</div>
-							<div class="card-body">
-								<div class="list-group list-group-flush">
-									<div class="list-group-item d-flex align-items-start border-0 px-0">
-										<div class="flex-shrink-0 me-3">
-											<i class="bi bi-calendar-plus text-success"></i>
-										</div>
-										<div class="flex-grow-1">
-											<div class="fw-semibold">New event added</div>
-											<div class="small text-muted">Orientation Day scheduled for 2025-09-01</div>
-											<div class="small text-muted">2 hours ago</div>
-										</div>
-									</div>
-									<div class="list-group-item d-flex align-items-start border-0 px-0">
-										<div class="flex-shrink-0 me-3">
-											<i class="bi bi-box-seam text-primary"></i>
-										</div>
-										<div class="flex-grow-1">
-											<div class="fw-semibold">Item borrowed</div>
-											<div class="small text-muted">Wireless Microphones borrowed by John Doe</div>
-											<div class="small text-muted">4 hours ago</div>
-										</div>
-									</div>
-									<div class="list-group-item d-flex align-items-start border-0 px-0">
-										<div class="flex-shrink-0 me-3">
-											<i class="bi bi-check-circle text-success"></i>
-										</div>
-										<div class="flex-grow-1">
-											<div class="fw-semibold">Event completed</div>
-											<div class="small text-muted">Summer Workshop successfully completed</div>
-											<div class="small text-muted">1 day ago</div>
-										</div>
-									</div>
-								</div>
+							<div class="activity-content">
+								<div class="activity-title">New event added</div>
+								<div class="activity-time">Orientation Day scheduled for 2025-09-01 • 2 hours ago</div>
+							</div>
+						</div>
+						<div class="activity-item">
+							<div class="activity-icon">
+								<i class="bi bi-box-seam"></i>
+							</div>
+							<div class="activity-content">
+								<div class="activity-title">Item borrowed</div>
+								<div class="activity-time">Wireless Microphones borrowed by John Doe • 4 hours ago</div>
+							</div>
+						</div>
+						<div class="activity-item">
+							<div class="activity-icon">
+								<i class="bi bi-check-circle"></i>
+							</div>
+							<div class="activity-content">
+								<div class="activity-title">Event completed</div>
+								<div class="activity-time">Summer Workshop successfully completed • 1 day ago</div>
 							</div>
 						</div>
 					</div>

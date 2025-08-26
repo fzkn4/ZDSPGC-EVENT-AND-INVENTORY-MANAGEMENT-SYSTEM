@@ -1,10 +1,56 @@
-/* Custom tweaks for mobile-first UI */
-body {
-  background-color: #f6f8fb;
+/* Modern Theme - Unified Design System - PERFORMANCE OPTIMIZED & COMPACT & FULL HEIGHT */
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
 }
 
-main.container {
-  padding-bottom: 4.5rem; /* space for bottom nav */
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-size: 0.9rem; /* OPTIMIZED: Smaller base font size */
+}
+
+/* OPTIMIZED: Simplified background - removed heavy floating animations */
+.app-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+  opacity: 0.3;
+}
+
+/* OPTIMIZED: Removed floating shapes animation for better performance */
+.floating-shapes {
+  display: none; /* Disabled for performance */
+}
+
+/* Main container background - WHITE */
+body > div.container-fluid {
+  background-color: white;
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+}
+
+/* Main content area - occupy full remaining space */
+body > div.container-fluid > div > main {
+  width: 100%;
+  flex: 1;
+  min-height: calc(100vh - 80px); /* Account for header height */
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  border: none;
+  border-radius: 0;
 }
 
 /* Main layout container */
@@ -12,30 +58,498 @@ main.container {
   display: flex;
   flex-wrap: nowrap;
   align-items: flex-start;
+  position: relative;
+  z-index: 1;
+  margin-left: 240px; /* Add margin to account for fixed sidebar width */
 }
 
-/* Sidebar */
-.sidebar {
-  border-right: 1px solid rgba(0, 0, 0, 0.06);
-  background: #fff;
-  min-height: calc(100vh - 56px);
-  max-width: 280px;
-  flex-shrink: 0;
+/* Modern Header - OPTIMIZED & COMPACT */
+.navbar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  /* OPTIMIZED: Removed backdrop-filter for better performance */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  /* OPTIMIZED: Simplified box-shadow */
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
+  position: relative;
+  overflow: visible;
+  padding: 0.5rem 0; /* COMPACT: Reduced padding */
+  transition: all 0.3s ease;
+  z-index: 1030;
 }
+
+/* Override Bootstrap navbar classes */
+.navbar.bg-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.navbar.navbar-dark {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+/* Force override any Bootstrap background classes */
+.navbar[class*="bg-"] {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+/* OPTIMIZED: Simplified texture overlay */
+.navbar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 70%
+  );
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.navbar .container-fluid {
+  position: relative;
+  z-index: 1;
+}
+
+/* Enhanced Brand Styling - COMPACT */
+.navbar-brand {
+  font-weight: 700;
+  color: white !important;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 1.1rem; /* COMPACT: Smaller font size */
+  padding: 0.25rem 0; /* COMPACT: Reduced padding */
+  position: relative;
+}
+
+.navbar-brand::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #fff, rgba(255, 255, 255, 0.5));
+  transition: width 0.3s ease;
+}
+
+.navbar-brand:hover::after {
+  width: 100%;
+}
+
+.navbar-brand:hover {
+  color: rgba(255, 255, 255, 0.9) !important;
+  transform: translateY(-1px);
+}
+
+.navbar-brand i {
+  color: white;
+  transition: all 0.3s ease;
+  font-size: 1.3rem; /* COMPACT: Smaller icon size */
+  margin-right: 0.4rem; /* COMPACT: Reduced margin */
+}
+
+.navbar-brand:hover i {
+  color: rgba(255, 255, 255, 0.95);
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* Mobile Navigation Toggle - COMPACT */
+.navbar-toggler {
+  border: none;
+  padding: 0.4rem; /* COMPACT: Reduced padding */
+  border-radius: 6px; /* COMPACT: Smaller border radius */
+  background: rgba(255, 255, 255, 0.1);
+  /* OPTIMIZED: Removed backdrop-filter */
+  transition: all 0.3s ease;
+}
+
+.navbar-toggler:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  transition: all 0.3s ease;
+}
+
+/* Enhanced Navigation Items - COMPACT */
+.navbar-nav {
+  align-items: center;
+  gap: 0.3rem; /* COMPACT: Reduced gap */
+}
+
+.navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 500;
+  padding: 0.4rem 0.8rem; /* COMPACT: Reduced padding */
+  border-radius: 6px; /* COMPACT: Smaller border radius */
+  transition: all 0.3s ease;
+  position: relative;
+  font-size: 0.85rem; /* COMPACT: Smaller font size */
+}
+
+.navbar-nav .nav-link:hover {
+  color: white !important;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Enhanced Button Styling - COMPACT */
+.navbar-nav .btn-outline-light {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+  transition: all 0.3s ease;
+  border-radius: 6px; /* COMPACT: Smaller border radius */
+  padding: 0.4rem 0.8rem; /* COMPACT: Reduced padding */
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+  font-size: 0.85rem; /* COMPACT: Smaller font size */
+}
+
+.navbar-nav .btn-outline-light::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.navbar-nav .btn-outline-light:hover::before {
+  left: 100%;
+}
+
+.navbar-nav .btn-outline-light:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: white;
+  transform: translateY(-2px);
+  /* OPTIMIZED: Simplified box-shadow */
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+
+/* Ensure all navbar buttons are white */
+.navbar .btn-outline-light,
+.navbar .btn-outline-light:hover,
+.navbar .btn-outline-light:focus,
+.navbar .btn-outline-light:active {
+  color: white !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.navbar .btn-outline-light:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Enhanced Dropdown Styling - OPTIMIZED & COMPACT */
+.dropdown-menu {
+  background: rgba(255, 255, 255, 0.95);
+  /* OPTIMIZED: Reduced backdrop-filter blur */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px; /* COMPACT: Smaller border radius */
+  /* OPTIMIZED: Simplified box-shadow */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  padding: 0.4rem 0; /* COMPACT: Reduced padding */
+  margin-top: 0.4rem; /* COMPACT: Reduced margin */
+  animation: dropdownFadeIn 0.3s ease;
+  z-index: 1050;
+  position: absolute;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item {
+  color: #495057;
+  transition: all 0.3s ease;
+  padding: 0.6rem 0.8rem; /* COMPACT: Reduced padding */
+  border-radius: 6px; /* COMPACT: Smaller border radius */
+  margin: 0 0.4rem; /* COMPACT: Reduced margin */
+  position: relative;
+  font-size: 0.85rem; /* COMPACT: Smaller font size */
+}
+
+.dropdown-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, rgba(102, 126, 234, 0.1), transparent);
+  transition: width 0.3s ease;
+  border-radius: 6px;
+}
+
+.dropdown-item:hover::before {
+  width: 100%;
+}
+
+.dropdown-item:hover {
+  background-color: transparent;
+  color: #667eea;
+  transform: translateX(4px);
+}
+
+.dropdown-item.text-danger:hover {
+  background-color: transparent;
+  color: #dc3545;
+}
+
+.dropdown-item.text-danger::before {
+  background: linear-gradient(90deg, rgba(220, 53, 69, 0.1), transparent);
+}
+
+/* Mobile Responsive Enhancements - COMPACT */
+@media (max-width: 991.98px) {
+  .navbar {
+    padding: 0.4rem 0; /* COMPACT: Reduced padding */
+  }
+
+  .navbar-brand {
+    font-size: 1rem; /* COMPACT: Smaller font size */
+  }
+
+  .navbar-brand i {
+    font-size: 1.2rem; /* COMPACT: Smaller icon size */
+  }
+
+  .navbar-collapse {
+    background: rgba(255, 255, 255, 0.1);
+    /* OPTIMIZED: Reduced backdrop-filter */
+    backdrop-filter: blur(10px);
+    border-radius: 10px; /* COMPACT: Smaller border radius */
+    margin-top: 0.8rem; /* COMPACT: Reduced margin */
+    padding: 0.8rem; /* COMPACT: Reduced padding */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .navbar-nav {
+    gap: 0.2rem; /* COMPACT: Reduced gap */
+  }
+
+  .navbar-nav .btn-outline-light {
+    width: 100%;
+    justify-content: center;
+    margin: 0.2rem 0; /* COMPACT: Reduced margin */
+  }
+
+  .dropdown-menu {
+    position: absolute !important;
+    transform: translateY(0) !important;
+    width: auto;
+    min-width: 200px;
+    margin-top: 0.4rem; /* COMPACT: Reduced margin */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 1050;
+  }
+}
+
+/* Additional Mobile Enhancements - COMPACT */
+@media (max-width: 767.98px) {
+  .navbar-brand {
+    font-size: 0.9rem; /* COMPACT: Smaller font size */
+  }
+
+  .navbar-brand i {
+    font-size: 1.1rem; /* COMPACT: Smaller icon size */
+  }
+
+  .navbar-collapse {
+    margin-top: 0.6rem; /* COMPACT: Reduced margin */
+    padding: 0.6rem; /* COMPACT: Reduced padding */
+  }
+
+  .navbar-nav .btn-outline-light {
+    font-size: 0.8rem; /* COMPACT: Smaller font size */
+    padding: 0.3rem 0.6rem; /* COMPACT: Reduced padding */
+  }
+
+  .dropdown-item {
+    font-size: 0.8rem; /* COMPACT: Smaller font size */
+    padding: 0.5rem 0.6rem; /* COMPACT: Reduced padding */
+  }
+}
+
+/* Enhanced Focus States for Accessibility */
+.navbar-toggler:focus,
+.navbar-brand:focus,
+.navbar-nav .btn-outline-light:focus,
+.dropdown-item:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+  border-radius: 6px; /* COMPACT: Smaller border radius */
+}
+
+/* Improved Loading States */
+.navbar-toggler:active {
+  transform: scale(0.95);
+}
+
+.navbar-nav .btn-outline-light:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
+}
+
+/* Enhanced Visual Feedback */
+.navbar-nav .btn-outline-light:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.navbar-nav .btn-outline-light:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Improved Dropdown Positioning */
+.dropdown-menu.show {
+  animation: dropdownFadeIn 0.3s ease;
+}
+
+/* Ensure dropdown containers position correctly */
+.nav-item.dropdown {
+  position: relative;
+}
+
+.dropdown-menu-end {
+  right: 0;
+  left: auto;
+}
+
+/* Mobile Brand Adjustments - COMPACT */
+@media (max-width: 575.98px) {
+  .navbar-brand span {
+    display: none;
+  }
+
+  .navbar-brand i {
+    margin-right: 0;
+  }
+}
+
+/* Smooth Transitions for All Interactive Elements */
+.navbar *,
+.dropdown-menu *,
+.navbar-nav * {
+  transition: all 0.3s ease;
+}
+
+/* Enhanced Hover Effects for Touch Devices */
+@media (hover: none) and (pointer: coarse) {
+  .navbar-brand:hover::after {
+    width: 0;
+  }
+
+  .navbar-nav .btn-outline-light:hover::before {
+    left: -100%;
+  }
+
+  .dropdown-item:hover::before {
+    width: 0;
+  }
+
+  .dropdown-item:hover {
+    transform: none;
+  }
+}
+
+/* Ensure header content is above texture */
+body > header .container-fluid {
+  position: relative;
+  z-index: 2;
+}
+
+/* Sidebar - OPTIMIZED & COMPACT & FULL HEIGHT */
+.sidebar {
+  background: rgba(255, 255, 255, 0.95);
+  /* OPTIMIZED: Reduced backdrop-filter */
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  height: 100vh; /* FULL HEIGHT: Occupy full viewport height */
+  max-width: 240px; /* COMPACT: Reduced max width */
+  flex-shrink: 0;
+  /* OPTIMIZED: Simplified box-shadow */
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  padding: 1rem 0.5rem; /* COMPACT: Reduced padding */
+  position: fixed; /* FULL HEIGHT: Fixed position to stay in place */
+  top: 0; /* FULL HEIGHT: Start from top of viewport */
+  left: 0; /* FULL HEIGHT: Align to left edge */
+  z-index: 1020; /* FULL HEIGHT: Ensure proper layering */
+  overflow-y: auto; /* FULL HEIGHT: Allow scrolling if content is too long */
+}
+
 .sidebar .xsmall {
-  font-size: 0.72rem;
+  font-size: 0.65rem; /* COMPACT: Smaller font size */
+}
+
+/* Sidebar Menu Icon Switching Behavior */
+.sidebar-menu .menu-link .filled-icon {
+  display: none;
+}
+
+.sidebar-menu .menu-link .unfilled-icon {
+  display: inline-block;
+}
+
+.sidebar-menu .menu-link:hover .filled-icon,
+.sidebar-menu .menu-link.active .filled-icon {
+  display: inline-block;
+}
+
+.sidebar-menu .menu-link:hover .unfilled-icon,
+.sidebar-menu .menu-link.active .unfilled-icon {
+  display: none;
+}
+
+/* Ensure sidebar menu items are properly spaced for full height */
+.sidebar-menu {
+  padding-top: 80px; /* FULL HEIGHT: Add top padding to account for header */
+  height: calc(100vh - 80px); /* FULL HEIGHT: Calculate remaining height */
+  overflow-y: auto; /* FULL HEIGHT: Allow scrolling */
 }
 
 .sidebar-menu .menu-link {
   display: block;
-  padding: 0.55rem 0.75rem;
-  border-radius: 8px;
-  color: #111;
+  padding: 0.6rem 0.8rem; /* COMPACT: Reduced padding */
+  border-radius: 10px; /* COMPACT: Smaller border radius */
+  color: #495057;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.85rem; /* COMPACT: Smaller font size */
+  font-weight: 500;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  margin: 0.2rem 0.3rem; /* COMPACT: Reduced margin */
+  border: 1px solid transparent;
 }
 
 .sidebar-menu .menu-link::before {
@@ -48,7 +562,7 @@ main.container {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(13, 110, 253, 0.1),
+    rgba(102, 126, 234, 0.1),
     transparent
   );
   transition: left 0.5s ease;
@@ -59,164 +573,345 @@ main.container {
 }
 
 .sidebar-menu .menu-link i {
-  width: 20px;
+  width: 18px; /* COMPACT: Smaller width */
   text-align: center;
   transition: transform 0.3s ease, color 0.3s ease;
+  margin-right: 0.4rem; /* COMPACT: Reduced margin */
+  font-size: 0.9rem; /* COMPACT: Smaller icon size */
 }
 
 .sidebar-menu .menu-link:hover {
-  background: #f1f4f9;
+  background: rgba(102, 126, 234, 0.08);
   transform: translateX(4px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  /* OPTIMIZED: Simplified box-shadow */
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+  color: #667eea;
 }
 
 .sidebar-menu .menu-link:hover i {
   transform: scale(1.1);
+  color: #667eea;
 }
 
 .sidebar-menu .menu-link.active {
-  color: #0d6efd;
-  background: rgba(13, 110, 253, 0.08);
-  border: 1px solid rgba(13, 110, 253, 0.2);
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.12);
+  border: 1px solid rgba(102, 126, 234, 0.3);
   transform: translateX(4px);
-  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15);
+  /* OPTIMIZED: Simplified box-shadow */
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+  font-weight: 600;
 }
 
 .sidebar-menu .menu-link.active i {
   transform: scale(1.1);
+  color: #667eea;
 }
 
-/* Filled icon styles for active menu items */
-.sidebar-menu .menu-link.active .fi-br-dashboard-panel::before {
-  content: "\f1b0"; /* Dashboard filled */
-}
-
-.sidebar-menu .menu-link.active .fi-br-calendar::before {
-  content: "\f1b1"; /* Calendar filled */
-}
-
-.sidebar-menu .menu-link.active .fi-br-box::before {
-  content: "\f1b2"; /* Box filled */
-}
-
-/* Icon switching for active menu items */
-.sidebar-menu .menu-link .filled-icon {
-  display: none;
-  transition: opacity 0.3s ease;
-}
-
-.sidebar-menu .menu-link.active .unfilled-icon {
-  display: none;
-  opacity: 0;
-}
-
-.sidebar-menu .menu-link.active .filled-icon {
-  display: inline-block;
-  opacity: 1;
-  animation: fadeInScale 0.3s ease;
-}
-
-@keyframes fadeInScale {
-  0% {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Page transition effects */
+/* Adjust page content for full height sidebar */
 .page-content {
-  animation: fadeInUp 0.4s ease;
-  flex: 1;
-  min-width: 0;
-  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  /* OPTIMIZED: Reduced backdrop-filter */
+  backdrop-filter: blur(10px);
+  border-radius: 20px; /* COMPACT: Smaller border radius */
+  margin: 0.8rem; /* COMPACT: Reduced margin */
+  padding: 1.5rem; /* COMPACT: Reduced padding */
+  /* OPTIMIZED: Simplified box-shadow */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  min-height: calc(100vh - 120px);
+  width: 100%; /* FULL HEIGHT: Ensure full width */
 }
 
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
+/* Responsive adjustments for full height sidebar */
+@media (max-width: 768px) {
+  .sidebar {
+    position: relative; /* FULL HEIGHT: Return to relative positioning on mobile */
+    height: auto; /* FULL HEIGHT: Auto height on mobile */
+    max-width: 100%;
+    min-height: auto;
+    padding: 0.5rem; /* COMPACT: Reduced padding */
   }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
+
+  .container-fluid .row {
+    margin-left: 0; /* FULL HEIGHT: Remove margin on mobile */
+    flex-direction: column;
   }
-}
 
-/* Loading state for menu items */
-.sidebar-menu .menu-link.loading {
-  pointer-events: none;
-  opacity: 0.7;
-}
-
-.sidebar-menu .menu-link.loading i {
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
+  .page-content {
+    margin: 0.4rem; /* COMPACT: Reduced margin */
+    padding: 1rem; /* COMPACT: Reduced padding */
   }
-  50% {
-    opacity: 0.5;
+
+  .card-body {
+    padding: 0.8rem; /* COMPACT: Reduced padding */
   }
-}
 
-.section-label {
-  letter-spacing: 0.06em;
-  font-size: 0.72rem;
-}
-
-#bottomTabs .nav-link {
-  border-radius: 0;
-}
-
-/* Mini calendar cells */
-#miniCalendar .day-cell {
-  padding: 0.5rem 0;
-  border-radius: 0.5rem;
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-@media (min-width: 768px) {
-  #bottomTabs {
-    display: none;
+  .btn {
+    padding: 0.4rem 0.8rem; /* COMPACT: Reduced padding */
+    font-size: 0.8rem; /* COMPACT: Smaller font size */
   }
 }
 
-/* Admin-only visibility helper */
-.requires-admin {
-  display: none;
-}
-.admin-mode .requires-admin {
-  display: initial;
-}
-
-/* Print styles for invoice */
-@media print {
-  #bottomTabs,
-  header,
-  .navbar,
-  .modal-footer,
-  .btn,
-  .nav,
-  .toast-container {
-    display: none !important;
-  }
-  body {
-    background: #fff;
-  }
-  #invoiceContainer {
-    padding: 0;
-  }
+/* Card Styles - OPTIMIZED & COMPACT */
+.card {
+  background: rgba(255, 255, 255, 0.9);
+  /* OPTIMIZED: Reduced backdrop-filter */
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px; /* COMPACT: Smaller border radius */
+  /* OPTIMIZED: Simplified box-shadow */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  margin-bottom: 1rem; /* COMPACT: Reduced margin */
 }
 
-/* Force-black icon class used for the search icon */
-.icon-fixed-black {
-  color: #000 !important;
+.card:hover {
+  /* OPTIMIZED: Simplified transform and box-shadow */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.card-body {
+  padding: 1rem; /* COMPACT: Reduced padding */
+}
+
+.card-title {
+  font-size: 1.1rem; /* COMPACT: Smaller font size */
+  margin-bottom: 0.5rem; /* COMPACT: Reduced margin */
+}
+
+.card-text {
+  font-size: 0.9rem; /* COMPACT: Smaller font size */
+  margin-bottom: 0.8rem; /* COMPACT: Reduced margin */
+}
+
+/* Button Styles - OPTIMIZED & COMPACT */
+.btn {
+  border-radius: 6px; /* COMPACT: Smaller border radius */
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  font-size: 0.85rem; /* COMPACT: Smaller font size */
+  padding: 0.5rem 1rem; /* COMPACT: Reduced padding */
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  /* OPTIMIZED: Simplified box-shadow */
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+  /* OPTIMIZED: Simplified transform and box-shadow */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}
+
+.btn-outline-primary {
+  border: 2px solid #667eea;
+  color: #667eea;
+  background: transparent;
+}
+
+.btn-outline-primary:hover {
+  background: #667eea;
+  color: white;
+  /* OPTIMIZED: Simplified transform and box-shadow */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* Form Styles - OPTIMIZED & COMPACT */
+.form-control,
+.form-select {
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 6px; /* COMPACT: Smaller border radius */
+  padding: 0.6rem 0.8rem; /* COMPACT: Reduced padding */
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 0.85rem; /* COMPACT: Smaller font size */
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #667eea;
+  /* OPTIMIZED: Simplified box-shadow */
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+  background: rgba(255, 255, 255, 1);
+}
+
+.form-label {
+  font-size: 0.85rem; /* COMPACT: Smaller font size */
+  font-weight: 500;
+  margin-bottom: 0.3rem; /* COMPACT: Reduced margin */
+}
+
+/* Alert Styles - COMPACT */
+.alert {
+  border-radius: 10px; /* COMPACT: Smaller border radius */
+  border: none;
+  padding: 0.8rem 1rem; /* COMPACT: Reduced padding */
+  /* OPTIMIZED: Reduced backdrop-filter */
+  backdrop-filter: blur(5px);
+  font-size: 0.85rem; /* COMPACT: Smaller font size */
+}
+
+.alert-success {
+  background: rgba(25, 135, 84, 0.1);
+  color: #198754;
+  border-left: 3px solid #198754; /* COMPACT: Reduced border */
+}
+
+.alert-danger {
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+  border-left: 3px solid #dc3545; /* COMPACT: Reduced border */
+}
+
+.alert-warning {
+  background: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
+  border-left: 3px solid #ffc107; /* COMPACT: Reduced border */
+}
+
+.alert-info {
+  background: rgba(13, 202, 240, 0.1);
+  color: #0dcaf0;
+  border-left: 3px solid #0dcaf0; /* COMPACT: Reduced border */
+}
+
+/* Badge Styles - COMPACT */
+.badge {
+  border-radius: 6px; /* COMPACT: Smaller border radius */
+  font-weight: 600;
+  padding: 0.3rem 0.6rem; /* COMPACT: Reduced padding */
+  font-size: 0.75rem; /* COMPACT: Smaller font size */
+}
+
+/* List Group Styles - COMPACT */
+.list-group-item {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(102, 126, 234, 0.1);
+  border-radius: 10px; /* COMPACT: Smaller border radius */
+  margin-bottom: 0.4rem; /* COMPACT: Reduced margin */
+  transition: all 0.3s ease;
+  padding: 0.8rem; /* COMPACT: Reduced padding */
+  font-size: 0.85rem; /* COMPACT: Smaller font size */
+}
+
+.list-group-item:hover {
+  background: rgba(102, 126, 234, 0.05);
+  transform: translateX(4px);
+}
+
+/* Modal Styles - OPTIMIZED & COMPACT */
+.modal-content {
+  background: rgba(255, 255, 255, 0.95);
+  /* OPTIMIZED: Reduced backdrop-filter */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px; /* COMPACT: Smaller border radius */
+  /* OPTIMIZED: Simplified box-shadow */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+  border-radius: 16px 16px 0 0; /* COMPACT: Smaller border radius */
+  padding: 1rem 1.5rem; /* COMPACT: Reduced padding */
+}
+
+.modal-footer {
+  border-top: 1px solid rgba(102, 126, 234, 0.1);
+  border-radius: 0 0 16px 16px; /* COMPACT: Smaller border radius */
+  padding: 1rem 1.5rem; /* COMPACT: Reduced padding */
+}
+
+.modal-body {
+  padding: 1.5rem; /* COMPACT: Reduced padding */
+}
+
+.modal-title {
+  font-size: 1.2rem; /* COMPACT: Smaller font size */
+}
+
+/* Table Styles - COMPACT */
+.table {
+  font-size: 0.85rem; /* COMPACT: Smaller font size */
+}
+
+.table th {
+  padding: 0.6rem; /* COMPACT: Reduced padding */
+  font-size: 0.8rem; /* COMPACT: Smaller font size */
+}
+
+.table td {
+  padding: 0.6rem; /* COMPACT: Reduced padding */
+}
+
+/* Typography - COMPACT */
+h1 {
+  font-size: 1.8rem; /* COMPACT: Smaller font size */
+}
+
+h2 {
+  font-size: 1.5rem; /* COMPACT: Smaller font size */
+}
+
+h3 {
+  font-size: 1.3rem; /* COMPACT: Smaller font size */
+}
+
+h4 {
+  font-size: 1.1rem; /* COMPACT: Smaller font size */
+}
+
+h5 {
+  font-size: 1rem; /* COMPACT: Smaller font size */
+}
+
+h6 {
+  font-size: 0.9rem; /* COMPACT: Smaller font size */
+}
+
+/* Spacing utilities - COMPACT */
+.mb-4 {
+  margin-bottom: 1.2rem !important; /* COMPACT: Reduced margin */
+}
+
+.mb-3 {
+  margin-bottom: 0.9rem !important; /* COMPACT: Reduced margin */
+}
+
+.mb-2 {
+  margin-bottom: 0.6rem !important; /* COMPACT: Reduced margin */
+}
+
+.mb-1 {
+  margin-bottom: 0.3rem !important; /* COMPACT: Reduced margin */
+}
+
+.py-3 {
+  padding-top: 0.9rem !important; /* COMPACT: Reduced padding */
+  padding-bottom: 0.9rem !important; /* COMPACT: Reduced padding */
+}
+
+.py-4 {
+  padding-top: 1.2rem !important; /* COMPACT: Reduced padding */
+  padding-bottom: 1.2rem !important; /* COMPACT: Reduced padding */
+}
+
+.px-3 {
+  padding-left: 0.9rem !important; /* COMPACT: Reduced padding */
+  padding-right: 0.9rem !important; /* COMPACT: Reduced padding */
+}
+
+.px-4 {
+  padding-left: 1.2rem !important; /* COMPACT: Reduced padding */
+  padding-right: 1.2rem !important; /* COMPACT: Reduced padding */
 }

@@ -1,3 +1,18 @@
+<?php
+require_once 'auth.php';
+
+// Require authentication
+requireAuth();
+
+// Get current user data
+$currentUser = getCurrentUser();
+$sessionData = getSessionData();
+
+// Handle logout
+if (isset($_GET['logout'])) {
+    $auth->logout();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,24 +31,53 @@
 	<link href="styles/style.css" rel="stylesheet" />
 	<link href="styles/inventory.css" rel="stylesheet" />
 </head>
-<body>
-	<header class="navbar navbar-expand-lg navbar-dark bg-primary">
+<body class="user-<?php echo htmlspecialchars($sessionData['user_type']); ?>">
+	<!-- Background Animation -->
+	<div class="app-background">
+		<div class="floating-shapes">
+			<div class="shape shape-1"></div>
+			<div class="shape shape-2"></div>
+			<div class="shape shape-3"></div>
+			<div class="shape shape-4"></div>
+			<div class="shape shape-5"></div>
+		</div>
+	</div>
+	
+	<header class="navbar navbar-expand-lg">
 		<div class="container-fluid">
-			<a class="navbar-brand d-flex align-items-center gap-2" href="index.php">
+			<a class="navbar-brand d-flex align-items-center gap-2" href="dashboard.php">
 				<i class="bi bi-grid-1x2-fill"></i>
 				<span class="fw-semibold">ZDSPGC EIMS</span>
 			</a>
-			<ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
-				<li class="nav-item dropdown me-2">
-					<button class="btn btn-outline-light position-relative" id="btnNotifDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-						<i class="bi bi-bell"></i>
-						<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notifCount">0</span>
-					</button>
-					<ul class="dropdown-menu dropdown-menu-end p-0" aria-labelledby="btnNotifDropdown" id="notifMenu" style="min-width: 320px;">
-						<li class="px-3 py-2 small text-muted" id="notifEmpty">No notifications</li>
-					</ul>
-				</li>
-			</ul>
+			
+			<!-- Mobile Navigation Toggle -->
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			
+			<!-- Navigation Content -->
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+					<li class="nav-item dropdown">
+						<button class="btn btn-outline-light d-flex align-items-center gap-2" id="btnUserDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+							<i class="bi bi-person-circle"></i>
+							<span id="userDisplayName"><?php echo htmlspecialchars($sessionData['user_name']); ?></span>
+							<i class="bi bi-chevron-down"></i>
+						</button>
+						<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="btnUserDropdown">
+							<li><span class="dropdown-item-text small text-muted" id="userEmail"><?php echo htmlspecialchars($sessionData['user_email']); ?></span></li>
+							<?php if ($sessionData['student_id']): ?>
+							<li><span class="dropdown-item-text small text-muted">Student ID: <?php echo htmlspecialchars($sessionData['student_id']); ?></span></li>
+							<?php endif; ?>
+							<li><hr class="dropdown-divider"></li>
+							<li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Profile</a></li>
+							<li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Settings</a></li>
+							<li><hr class="dropdown-divider"></li>
+							<li><a class="dropdown-item text-danger" href="?logout=1"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
 		</div>
 	</header>
 
@@ -53,292 +97,136 @@
 				<div class="d-flex align-items-center justify-content-between mb-4">
 					<div>
 						<h1 class="h3 mb-1">Inventory Management</h1>
-						<p class="text-muted mb-0">Manage equipment, items, and track borrowing activities</p>
+						<p class="text-muted mb-0">Manage equipment and items</p>
 					</div>
 					<div class="d-flex gap-2">
-						<button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalLoan">
-							<i class="bi bi-arrow-left-right me-1"></i>Borrow Item
-						</button>
 						<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalInventory">
 							<i class="bi bi-plus-lg me-1"></i>Add Item
+						</button>
+						<button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalLoan">
+							<i class="bi bi-arrow-left-right me-1"></i>Borrow Item
 						</button>
 					</div>
 				</div>
 
 				<!-- Inventory Statistics -->
-				<div class="row g-3 mb-4">
-					<div class="col-6 col-md-3">
-						<div class="card shadow-sm h-100">
-							<div class="card-body d-flex align-items-center gap-3">
-								<i class="bi bi-box-seam fs-3 text-primary"></i>
-								<div>
-									<div class="small text-muted">Total Items</div>
-									<div class="fs-5 fw-semibold" id="statTotalItems">45</div>
-								</div>
+				<div class="inventory-overview">
+					<div class="inventory-stats">
+						<div class="inventory-stat-card">
+							<div class="inventory-stat-icon">
+								<i class="bi bi-box-seam"></i>
 							</div>
+							<div class="inventory-stat-number">45</div>
+							<div class="inventory-stat-label">Total Items</div>
 						</div>
-					</div>
-					<div class="col-6 col-md-3">
-						<div class="card shadow-sm h-100">
-							<div class="card-body d-flex align-items-center gap-3">
-								<i class="bi bi-arrow-left-right fs-3 text-warning"></i>
-								<div>
-									<div class="small text-muted">Borrowed</div>
-									<div class="fs-5 fw-semibold" id="statBorrowedItems">12</div>
-								</div>
+						<div class="inventory-stat-card">
+							<div class="inventory-stat-icon">
+								<i class="bi bi-arrow-left-right"></i>
 							</div>
+							<div class="inventory-stat-number">12</div>
+							<div class="inventory-stat-label">Borrowed</div>
 						</div>
-					</div>
-					<div class="col-6 col-md-3">
-						<div class="card shadow-sm h-100">
-							<div class="card-body d-flex align-items-center gap-3">
-								<i class="bi bi-check-circle fs-3 text-success"></i>
-								<div>
-									<div class="small text-muted">Available</div>
-									<div class="fs-5 fw-semibold" id="statAvailableItems">33</div>
-								</div>
+						<div class="inventory-stat-card">
+							<div class="inventory-stat-icon">
+								<i class="bi bi-check-circle"></i>
 							</div>
+							<div class="inventory-stat-number">33</div>
+							<div class="inventory-stat-label">Available</div>
 						</div>
-					</div>
-					<div class="col-6 col-md-3">
-						<div class="card shadow-sm h-100">
-							<div class="card-body d-flex align-items-center gap-3">
-								<i class="bi bi-exclamation-triangle fs-3 text-danger"></i>
-								<div>
-									<div class="small text-muted">Low Stock</div>
-									<div class="fs-5 fw-semibold" id="statLowStockItems">3</div>
-								</div>
+						<div class="inventory-stat-card">
+							<div class="inventory-stat-icon">
+								<i class="bi bi-exclamation-triangle"></i>
 							</div>
+							<div class="inventory-stat-number">3</div>
+							<div class="inventory-stat-label">Low Stock</div>
 						</div>
 					</div>
 				</div>
 
-				<!-- Filters and Search -->
-				<div class="row g-3 mb-4">
-					<div class="col-12">
-						<div class="card shadow-sm">
-							<div class="card-body">
-								<div class="row g-3">
-									<div class="col-12 col-md-4">
-										<label for="searchItem" class="form-label">Search Items</label>
-										<input type="text" class="form-control" id="searchItem" placeholder="Search by name, category, or location...">
-									</div>
-									<div class="col-12 col-md-3">
-										<label for="filterCategory" class="form-label">Category</label>
-										<select class="form-select" id="filterCategory">
-											<option value="">All Categories</option>
-											<option value="Audio">Audio</option>
-											<option value="Electrical">Electrical</option>
-											<option value="Furniture">Furniture</option>
-											<option value="IT">IT</option>
-										</select>
-									</div>
-									<div class="col-12 col-md-3">
-										<label for="filterLocation" class="form-label">Location</label>
-										<select class="form-select" id="filterLocation">
-											<option value="">All Locations</option>
-											<option value="AV Room">AV Room</option>
-											<option value="Storage A">Storage A</option>
-											<option value="Storage B">Storage B</option>
-										</select>
-									</div>
-									<div class="col-12 col-md-2">
-										<label for="filterStatus" class="form-label">Status</label>
-										<select class="form-select" id="filterStatus">
-											<option value="">All</option>
-											<option value="available">Available</option>
-											<option value="borrowed">Borrowed</option>
-											<option value="low">Low Stock</option>
-										</select>
-									</div>
-								</div>
-							</div>
+				<!-- Search and Filter -->
+				<div class="inventory-filters">
+					<div class="filter-group">
+						<div class="filter-input">
+							<input type="text" class="form-control" placeholder="Search items..." id="searchInventory">
 						</div>
+						<select class="form-select" id="filterCategory" style="max-width: 200px;">
+							<option value="">All Categories</option>
+							<option value="Audio">Audio</option>
+							<option value="Electrical">Electrical</option>
+							<option value="Furniture">Furniture</option>
+							<option value="IT">IT</option>
+						</select>
+						<select class="form-select" id="filterStatus" style="max-width: 200px;">
+							<option value="">All Status</option>
+							<option value="available">Available</option>
+							<option value="borrowed">Borrowed</option>
+							<option value="low-stock">Low Stock</option>
+						</select>
 					</div>
 				</div>
 
-				<!-- Inventory List -->
-				<div class="row g-3 mb-4">
-					<div class="col-12">
-						<div class="card shadow-sm">
-							<div class="card-header bg-light d-flex align-items-center justify-content-between">
-								<h5 class="card-title mb-0"><i class="bi bi-box-seam me-2"></i>Inventory Items</h5>
-								<div class="d-flex gap-2">
-									<button class="btn btn-sm btn-outline-secondary" id="btnExportInventory">
-										<i class="bi bi-download me-1"></i>Export
-									</button>
-									<button class="btn btn-sm btn-outline-primary" id="btnPrintInventory">
-										<i class="bi bi-printer me-1"></i>Print
-									</button>
-								</div>
+				<!-- Inventory Items -->
+				<div class="inventory-items">
+					<div class="inventory-item">
+						<div class="inventory-item-header">
+							<h5 class="inventory-item-name">Projector</h5>
+							<span class="inventory-item-category">Electronics</span>
+						</div>
+						<div class="inventory-item-details">
+							<div class="inventory-item-location">
+								<i class="bi bi-geo-alt"></i>
+								Storage Room A
 							</div>
-							<div class="card-body">
-								<div class="table-responsive">
-									<table class="table table-hover">
-										<thead>
-											<tr>
-												<th>Item Name</th>
-												<th>Category</th>
-												<th>Location</th>
-												<th>Quantity</th>
-												<th>Borrowed</th>
-												<th>Available</th>
-												<th>Status</th>
-												<th>Actions</th>
-											</tr>
-										</thead>
-										<tbody id="inventoryTableBody">
-											<tr>
-												<td>
-													<div class="fw-semibold">Wireless Microphones</div>
-													<div class="small text-muted">Professional audio equipment</div>
-												</td>
-												<td><span class="badge text-bg-primary">Audio</span></td>
-												<td>AV Room</td>
-												<td>8</td>
-												<td>2</td>
-												<td>6</td>
-												<td><span class="badge text-bg-success">Available</span></td>
-												<td>
-													<div class="btn-group btn-group-sm">
-														<button class="btn btn-outline-primary" title="Edit">
-															<i class="bi bi-pencil"></i>
-														</button>
-														<button class="btn btn-outline-info" title="Borrow">
-															<i class="bi bi-arrow-left-right"></i>
-														</button>
-														<button class="btn btn-outline-danger" title="Delete">
-															<i class="bi bi-trash"></i>
-														</button>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<div class="fw-semibold">Plastic Chairs</div>
-													<div class="small text-muted">Stackable seating</div>
-												</td>
-												<td><span class="badge text-bg-secondary">Furniture</span></td>
-												<td>Storage A</td>
-												<td>120</td>
-												<td>15</td>
-												<td>105</td>
-												<td><span class="badge text-bg-success">Available</span></td>
-												<td>
-													<div class="btn-group btn-group-sm">
-														<button class="btn btn-outline-primary" title="Edit">
-															<i class="bi bi-pencil"></i>
-														</button>
-														<button class="btn btn-outline-info" title="Borrow">
-															<i class="bi bi-arrow-left-right"></i>
-														</button>
-														<button class="btn btn-outline-danger" title="Delete">
-															<i class="bi bi-trash"></i>
-														</button>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<div class="fw-semibold">Extension Cords</div>
-													<div class="small text-muted">Power extension cables</div>
-												</td>
-												<td><span class="badge text-bg-warning">Electrical</span></td>
-												<td>Storage B</td>
-												<td>15</td>
-												<td>12</td>
-												<td>3</td>
-												<td><span class="badge text-bg-danger">Low Stock</span></td>
-												<td>
-													<div class="btn-group btn-group-sm">
-														<button class="btn btn-outline-primary" title="Edit">
-															<i class="bi bi-pencil"></i>
-														</button>
-														<button class="btn btn-outline-info" title="Borrow">
-															<i class="bi bi-arrow-left-right"></i>
-														</button>
-														<button class="btn btn-outline-danger" title="Delete">
-															<i class="bi bi-trash"></i>
-														</button>
-													</div>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
+							<div class="inventory-item-quantity">
+								<span class="quantity-badge">Qty: 5</span>
+								<span class="borrowed-badge">0 borrowed</span>
 							</div>
 						</div>
+						<div class="inventory-actions">
+							<a href="#" class="inventory-action-btn primary">Edit</a>
+							<a href="#" class="inventory-action-btn secondary">Borrow</a>
+						</div>
 					</div>
-				</div>
 
-				<!-- Active Loans -->
-				<div class="row g-3">
-					<div class="col-12">
-						<div class="card shadow-sm">
-							<div class="card-header bg-light">
-								<h5 class="card-title mb-0"><i class="bi bi-arrow-left-right me-2"></i>Active Loans</h5>
+					<div class="inventory-item">
+						<div class="inventory-item-header">
+							<h5 class="inventory-item-name">Chairs</h5>
+							<span class="inventory-item-category">Furniture</span>
+						</div>
+						<div class="inventory-item-details">
+							<div class="inventory-item-location">
+								<i class="bi bi-geo-alt"></i>
+								Storage Room B
 							</div>
-							<div class="card-body">
-								<div class="table-responsive">
-									<table class="table table-hover">
-										<thead>
-											<tr>
-												<th>Borrower</th>
-												<th>Item</th>
-												<th>Quantity</th>
-												<th>Borrowed Date</th>
-												<th>Due Date</th>
-												<th>Status</th>
-												<th>Actions</th>
-											</tr>
-										</thead>
-										<tbody id="loansTableBody">
-											<tr>
-												<td>
-													<div class="fw-semibold">John Doe</div>
-													<div class="small text-muted">john.doe@email.com</div>
-												</td>
-												<td>Wireless Microphones</td>
-												<td>2</td>
-												<td>2025-01-15</td>
-												<td>2025-01-20</td>
-												<td><span class="badge text-bg-warning">Active</span></td>
-												<td>
-													<div class="btn-group btn-group-sm">
-														<button class="btn btn-outline-success" title="Return">
-															<i class="bi bi-check-circle"></i>
-														</button>
-														<button class="btn btn-outline-info" title="Extend">
-															<i class="bi bi-calendar-plus"></i>
-														</button>
-													</div>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<div class="fw-semibold">Jane Smith</div>
-													<div class="small text-muted">jane.smith@email.com</div>
-												</td>
-												<td>Plastic Chairs</td>
-												<td>10</td>
-												<td>2025-01-14</td>
-												<td>2025-01-18</td>
-												<td><span class="badge text-bg-warning">Active</span></td>
-												<td>
-													<div class="btn-group btn-group-sm">
-														<button class="btn btn-outline-success" title="Return">
-															<i class="bi bi-check-circle"></i>
-														</button>
-														<button class="btn btn-outline-info" title="Extend">
-															<i class="bi bi-calendar-plus"></i>
-														</button>
-													</div>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
+							<div class="inventory-item-quantity">
+								<span class="quantity-badge">Qty: 50</span>
+								<span class="borrowed-badge">12 borrowed</span>
 							</div>
+						</div>
+						<div class="inventory-actions">
+							<a href="#" class="inventory-action-btn primary">Edit</a>
+							<a href="#" class="inventory-action-btn secondary">Borrow</a>
+						</div>
+					</div>
+
+					<div class="inventory-item">
+						<div class="inventory-item-header">
+							<h5 class="inventory-item-name">Wireless Microphones</h5>
+							<span class="inventory-item-category">Audio</span>
+						</div>
+						<div class="inventory-item-details">
+							<div class="inventory-item-location">
+								<i class="bi bi-geo-alt"></i>
+								Audio Equipment Room
+							</div>
+							<div class="inventory-item-quantity">
+								<span class="quantity-badge">Qty: 8</span>
+								<span class="borrowed-badge">3 borrowed</span>
+							</div>
+						</div>
+						<div class="inventory-actions">
+							<a href="#" class="inventory-action-btn primary">Edit</a>
+							<a href="#" class="inventory-action-btn secondary">Borrow</a>
 						</div>
 					</div>
 				</div>
@@ -347,7 +235,7 @@
 	</div>
 
 	<!-- Add Inventory Modal -->
-	<div class="modal fade" id="modalInventory" tabindex="-1" aria-hidden="true">
+	<div class="modal fade inventory-modal" id="modalInventory" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -398,7 +286,7 @@
 	</div>
 
 	<!-- Borrow/Loan Modal -->
-	<div class="modal fade" id="modalLoan" tabindex="-1" aria-hidden="true">
+	<div class="modal fade inventory-modal" id="modalLoan" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
