@@ -27,7 +27,11 @@ RUN chown -R www-data:www-data /var/www/html \
 RUN echo '<Directory /var/www/html>\n\
     AllowOverride All\n\
     Require all granted\n\
-</Directory>' > /etc/apache2/conf-available/docker-php.conf \
+</Directory>\n\
+\n\
+<FilesMatch \\.php$>\n\
+    SetHandler application/x-httpd-php\n\
+</FilesMatch>' > /etc/apache2/conf-available/docker-php.conf \
     && a2enconf docker-php
 
 # Expose port 80

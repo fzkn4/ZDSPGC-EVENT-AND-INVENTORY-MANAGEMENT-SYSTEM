@@ -1,0 +1,35 @@
+[
+    {
+        "id": 1,
+        "firstName": "Admin",
+        "lastName": "User",
+        "email": "admin@zdspgc.edu.ph",
+        "password": "$2y$10$DXGbjYkTre8JODbLe5\/W3u9tLFFvQ5Gpka3Cs573nCJh73flLXAU2",
+        "userType": "admin",
+        "studentId": null,
+        "created_at": "2025-08-26 01:14:45",
+        "last_login": null
+    },
+    {
+        "id": 2,
+        "firstName": "John",
+        "lastName": "Doe",
+        "email": "student@zdspgc.edu.ph",
+        "password": "$2y$10$i07E5ZrScIQXr1pT9wZs8OS7.ULW4T6qAtNn6RFUnSs\/X1QNO9zh2",
+        "userType": "student",
+        "studentId": "2024-0001",
+        "created_at": "2025-08-26 01:14:45",
+        "last_login": null
+    },
+    {
+        "id": 3,
+        "firstName": "admin",
+        "lastName": "admin",
+        "email": "admin@gmail.com",
+        "password": "$2y$10$RFKlPhue0FE4r0Rh38pzXuzuApupdI1boyMkRDIMuGzE73unlEs5u",
+        "userType": "admin",
+        "studentId": "",
+        "created_at": "2025-08-26 01:21:24",
+        "last_login": "2025-08-26 03:36:13"
+    }
+]
