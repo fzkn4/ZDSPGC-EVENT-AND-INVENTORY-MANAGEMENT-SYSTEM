@@ -201,7 +201,7 @@ body > div > div.container-fluid.h-100 > div > div {
 
 .forms-container {
   width: 100%;
-  max-width: 350px;
+  max-width: 450px;
 }
 
 /* Form Styles */
@@ -571,6 +571,37 @@ body > div > div.container-fluid.h-100 > div > div {
   margin: 0;
   padding: 0;
   overflow: hidden;
+}
+
+/* Name Fields Full Width */
+#signupFormElement .row {
+  margin: 0;
+}
+
+#signupFormElement .row .col-md-6 {
+  padding: 0;
+  margin-bottom: 16px;
+}
+
+#signupFormElement .row .col-md-6:first-child {
+  padding-right: 8px;
+}
+
+#signupFormElement .row .col-md-6:last-child {
+  padding-left: 8px;
+}
+
+/* Ensure full width on smaller screens */
+@media (max-width: 768px) {
+  #signupFormElement .row .col-md-6 {
+    padding: 0 !important;
+    margin-bottom: 16px;
+  }
+
+  #signupFormElement .row .col-md-6:first-child,
+  #signupFormElement .row .col-md-6:last-child {
+    padding: 0 !important;
+  }
 }
 
 /* Form Validation Styles */
