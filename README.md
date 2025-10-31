@@ -1,3 +1,47 @@
+## ZDSPGC Event & Inventory Management System - Local Setup
+
+### Prerequisites
+- Docker Desktop
+
+### Services
+- Web: PHP 8.2 + Apache (with PDO MySQL)
+- DB: MySQL 8.0
+
+### Quick start
+```bash
+docker compose up -d --build
+```
+
+Open: `http://localhost:8081` (change host port in `docker-compose.yml` if needed).
+
+Default admin (from seed):
+- Email/Username: `admin`
+- Password: `admin123`
+
+### Ports
+- Web: host `8081` → container `80`
+- MySQL: host `3307` → container `3306`
+
+If `8081` is busy on Windows, change it in `docker-compose.yml` (e.g., `8082:80`).
+
+### Environment
+App reads DB settings from env vars set in `docker-compose.yml` (`DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`). See `config.php`.
+
+### Database initialization
+The file `docker/mysql/init.sql` creates the `users` table and seeds a default admin. It only runs on first DB startup; to re-run, remove the `db_data` volume:
+```bash
+docker compose down -v
+docker compose up -d --build
+```
+
+### Common commands
+```bash
+docker compose logs -f web
+docker compose logs -f db
+docker compose exec web bash
+docker compose down
+```
+
 # ZDSPGC Event & Inventory Management System
 
 A comprehensive web-based system for managing events and inventory at ZDSPGC (Zamboanga del Sur Provincial Government College).

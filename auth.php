@@ -1,280 +1,195 @@
 <?php
-// Start session if not already started
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/config.php';
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Authentication class
-class Auth {
-    private $users = [];
-    private $session_timeout = 3600; // 1 hour
-    
-    public function __construct() {
-        // Load users from JSON file (in real app, this would be a database)
-        $this->loadUsers();
-        
-        // Check session timeout
-        $this->checkSessionTimeout();
+class Auth
+{
+    private PDO $pdo;
+
+    public function __construct(PDO $pdo)
+    {
+        $this->pdo = $pdo;
     }
-    
-    private function loadUsers() {
-        $usersFile = 'data/users.json';
-        
-        // Create data directory if it doesn't exist
-        if (!is_dir('data')) {
-            mkdir('data', 0755, true);
-        }
-        
-        // Create default users if file doesn't exist
-        if (!file_exists($usersFile)) {
-            $this->createDefaultUsers($usersFile);
-        }
-        
-        // Load users from file
-        if (file_exists($usersFile)) {
-            $this->users = json_decode(file_get_contents($usersFile), true) ?? [];
-        }
+
+    public function isLoggedIn(): bool
+    {
+        return isset($_SESSION['user_id']);
     }
-    
-    private function createDefaultUsers($usersFile) {
-        $defaultUsers = [
-            [
-                'id' => 1,
-                'firstName' => 'Admin',
-                'lastName' => 'User',
-                'email' => 'admin@zdspgc.edu.ph',
-                'password' => password_hash('admin123', PASSWORD_DEFAULT),
-                'userType' => 'admin',
-                'studentId' => null,
-                'created_at' => date('Y-m-d H:i:s'),
-                'last_login' => null
-            ],
-            [
-                'id' => 2,
-                'firstName' => 'John',
-                'lastName' => 'Doe',
-                'email' => 'student@zdspgc.edu.ph',
-                'password' => password_hash('student123', PASSWORD_DEFAULT),
-                'userType' => 'student',
-                'studentId' => '2024-0001',
-                'created_at' => date('Y-m-d H:i:s'),
-                'last_login' => null
-            ]
-        ];
-        
-        file_put_contents($usersFile, json_encode($defaultUsers, JSON_PRETTY_PRINT));
-        $this->users = $defaultUsers;
-    }
-    
-    public function login($email, $password, $userType) {
-        // Find user by email and user type
-        $user = null;
-        foreach ($this->users as $u) {
-            if ($u['email'] === $email && $u['userType'] === $userType) {
-                $user = $u;
-                break;
-            }
+
+    public function login(string $email, string $password, string $userType = 'student'): array
+    {
+        $email = trim(strtolower($email));
+        if ($email === '' || $password === '') {
+            return ['success' => false, 'message' => 'Email and password are required.'];
         }
-        
-        if (!$user) {
-            return ['success' => false, 'message' => 'Invalid email or user type'];
+
+        // Using email as username for simplicity; adjust schema if you store email separately
+        $stmt = $this->pdo->prepare('SELECT id, username AS email, password_hash FROM users WHERE username = :email LIMIT 1');
+        $stmt->execute(['email' => $email]);
+        $user = $stmt->fetch();
+
+        if (!$user || !password_verify($password, $user['password_hash'])) {
+            return ['success' => false, 'message' => 'Invalid credentials.'];
         }
-        
-        // Verify password
-        if (!password_verify($password, $user['password'])) {
-            return ['success' => false, 'message' => 'Invalid password'];
-        }
-        
-        // Update last login
-        $this->updateLastLogin($user['id']);
-        
-        // Set session data
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_email'] = $user['email'];
-        $_SESSION['user_type'] = $user['userType'];
-        $_SESSION['user_name'] = $user['firstName'] . ' ' . $user['lastName'];
-        $_SESSION['student_id'] = $user['studentId'];
+
+        $_SESSION['user_id'] = (int)$user['id'];
+        $_SESSION['user_email'] = $email;
+        $_SESSION['email'] = $email;
+        $_SESSION['user_type'] = $userType;
+        $_SESSION['user_name'] = $email; // Default to email if no name available
         $_SESSION['login_time'] = time();
         $_SESSION['is_logged_in'] = true;
-        
-        return ['success' => true, 'user' => $user];
+        session_regenerate_id(true);
+
+        return ['success' => true];
     }
-    
-    public function register($userData) {
-        // Check if email already exists
-        foreach ($this->users as $user) {
-            if ($user['email'] === $userData['email']) {
-                return ['success' => false, 'message' => 'Email already exists'];
-            }
+
+    public function logout(): void
+    {
+        session_unset();
+        session_destroy();
+        if (isset($_COOKIE[session_name()])) {
+            setcookie(session_name(), '', time() - 3600, '/');
         }
-        
-        // Create new user
-        $newUser = [
-            'id' => count($this->users) + 1,
-            'firstName' => $userData['firstName'],
-            'lastName' => $userData['lastName'],
-            'email' => $userData['email'],
-            'password' => password_hash($userData['password'], PASSWORD_DEFAULT),
-            'userType' => $userData['userType'],
-            'studentId' => $userData['studentId'] ?? null,
-            'created_at' => date('Y-m-d H:i:s'),
-            'last_login' => null
-        ];
-        
-        // Add to users array
-        $this->users[] = $newUser;
-        
-        // Save to file
-        $this->saveUsers();
-        
-        return ['success' => true, 'user' => $newUser];
+        header('Location: login.php');
+        exit;
     }
-    
-    private function updateLastLogin($userId) {
-        foreach ($this->users as &$user) {
-            if ($user['id'] == $userId) {
-                $user['last_login'] = date('Y-m-d H:i:s');
-                break;
-            }
-        }
-        $this->saveUsers();
-    }
-    
-    private function saveUsers() {
-        $usersFile = 'data/users.json';
-        file_put_contents($usersFile, json_encode($this->users, JSON_PRETTY_PRINT));
-    }
-    
-    public function isLoggedIn() {
-        return isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true;
-    }
-    
-    public function requireLogin() {
+
+    public function requireLogin(): void
+    {
         if (!$this->isLoggedIn()) {
             header('Location: login.php');
             exit;
         }
     }
-    
-    public function requireAdmin() {
+
+    public function requireAdmin(): void
+    {
         $this->requireLogin();
-        if ($_SESSION['user_type'] !== 'admin') {
+        if (($_SESSION['user_type'] ?? '') !== 'admin') {
             header('Location: dashboard.php?error=access_denied');
             exit;
         }
     }
-    
-    public function requireStudent() {
+
+    public function requireStudent(): void
+    {
         $this->requireLogin();
-        if ($_SESSION['user_type'] !== 'student') {
+        if (($_SESSION['user_type'] ?? '') !== 'student') {
             header('Location: dashboard.php?error=access_denied');
             exit;
         }
     }
-    
-    public function logout() {
-        // Clear session
-        session_unset();
-        session_destroy();
-        
-        // Clear any session cookies
-        if (isset($_COOKIE[session_name()])) {
-            setcookie(session_name(), '', time() - 3600, '/');
-        }
-        
-        header('Location: login.php');
-        exit;
-    }
-    
-    public function getCurrentUser() {
+
+    public function getCurrentUser(): ?array
+    {
         if (!$this->isLoggedIn()) {
             return null;
         }
-        
-        foreach ($this->users as $user) {
-            if ($user['id'] == $_SESSION['user_id']) {
-                return $user;
-            }
+        $userId = $_SESSION['user_id'] ?? null;
+        if (!$userId) {
+            return null;
         }
-        
-        return null;
+        $stmt = $this->pdo->prepare('SELECT id, username FROM users WHERE id = :id LIMIT 1');
+        $stmt->execute(['id' => $userId]);
+        return $stmt->fetch() ?: null;
     }
-    
-    public function getSessionData() {
+
+    public function getSessionData(): ?array
+    {
         if (!$this->isLoggedIn()) {
             return null;
         }
-        
         return [
             'user_id' => $_SESSION['user_id'] ?? null,
-            'user_email' => $_SESSION['user_email'] ?? null,
+            'user_email' => $_SESSION['user_email'] ?? $_SESSION['email'] ?? null,
             'user_type' => $_SESSION['user_type'] ?? null,
-            'user_name' => $_SESSION['user_name'] ?? null,
+            'user_name' => $_SESSION['user_name'] ?? $_SESSION['user_email'] ?? $_SESSION['email'] ?? 'User',
             'student_id' => $_SESSION['student_id'] ?? null,
-            'login_time' => $_SESSION['login_time'] ?? null
+            'login_time' => $_SESSION['login_time'] ?? null,
         ];
     }
-    
-    private function checkSessionTimeout() {
-        if ($this->isLoggedIn()) {
-            $loginTime = $_SESSION['login_time'] ?? 0;
-            $currentTime = time();
-            
-            if (($currentTime - $loginTime) > $this->session_timeout) {
-                $this->logout();
+
+    public function register(array $userData): array
+    {
+        $firstName = trim($userData['firstName'] ?? '');
+        $lastName = trim($userData['lastName'] ?? '');
+        $email = trim(strtolower($userData['email'] ?? ''));
+        $password = $userData['password'] ?? '';
+
+        if ($email === '' || $password === '') {
+            return ['success' => false, 'message' => 'Email and password are required.'];
+        }
+
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
+        // For demo, store email in username column. Extend schema for names as needed.
+        try {
+            $stmt = $this->pdo->prepare('INSERT INTO users (username, password_hash) VALUES (:email, :password_hash)');
+            $stmt->execute([
+                'email' => $email,
+                'password_hash' => $passwordHash,
+            ]);
+        } catch (PDOException $e) {
+            if ((int)$e->getCode() === 23000) {
+                return ['success' => false, 'message' => 'Account already exists.'];
             }
+            return ['success' => false, 'message' => 'Registration failed.'];
         }
-    }
-    
-    public function refreshSession() {
-        if ($this->isLoggedIn()) {
-            $_SESSION['login_time'] = time();
-        }
+
+        return ['success' => true];
     }
 }
 
-// Initialize authentication
-$auth = new Auth();
+// Expose $auth as in existing pages
+/** @var PDO $pdo */
+$auth = new Auth($pdo);
 
-// Function to require authentication on any page
-function requireAuth() {
+// Global helper functions for backward compatibility
+function requireAuth(): void
+{
     global $auth;
     $auth->requireLogin();
 }
 
-// Function to require admin access
-function requireAdmin() {
+function requireAdmin(): void
+{
     global $auth;
     $auth->requireAdmin();
 }
 
-// Function to require student access
-function requireStudent() {
+function requireStudent(): void
+{
     global $auth;
     $auth->requireStudent();
 }
 
-// Function to get current user data
-function getCurrentUser() {
+function getCurrentUser(): ?array
+{
     global $auth;
     return $auth->getCurrentUser();
 }
 
-// Function to get session data
-function getSessionData() {
+function getSessionData(): ?array
+{
     global $auth;
     return $auth->getSessionData();
 }
 
-// Function to check if user is admin
-function isAdmin() {
+function isAdmin(): bool
+{
     $sessionData = getSessionData();
-    return $sessionData && $sessionData['user_type'] === 'admin';
+    return $sessionData && ($sessionData['user_type'] ?? '') === 'admin';
 }
 
-// Function to check if user is student
-function isStudent() {
+function isStudent(): bool
+{
     $sessionData = getSessionData();
-    return $sessionData && $sessionData['user_type'] === 'student';
+    return $sessionData && ($sessionData['user_type'] ?? '') === 'student';
 }
-?>

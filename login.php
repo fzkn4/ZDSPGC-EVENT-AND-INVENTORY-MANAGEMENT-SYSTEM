@@ -187,19 +187,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 											</span>
 										</button>
 
-										<!-- Divider -->
-										<div class="divider">
-											<span>or</span>
-										</div>
-
-										<!-- Social Login -->
-										<div class="social-login">
-											<button type="button" class="btn btn-outline-secondary w-100 mb-2">
-												<i class="bi bi-google me-2"></i>
-												Continue with Google
-											</button>
-										</div>
-
 										<!-- Switch to Signup -->
 										<div class="auth-switch text-center mt-4">
 											<p class="mb-0">

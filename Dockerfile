@@ -7,35 +7,24 @@ RUN apt-get update && apt-get install -y \
     unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions
-RUN docker-php-ext-install zip
+# Install PDO MySQL and other PHP extensions
+RUN docker-php-ext-install pdo pdo_mysql zip
 
-# Enable Apache mod_rewrite
+# Enable Apache modules
 RUN a2enmod rewrite
+
+# Configure Apache DocumentRoot
+ENV APACHE_DOCUMENT_ROOT=/var/www/html
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/000-default.conf \
+    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+# Allow .htaccess overrides
+RUN printf "<Directory /var/www/html>\n    AllowOverride All\n    Require all granted\n</Directory>\n" > /etc/apache2/conf-available/project.conf \
+    && a2enconf project
 
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy application files
-COPY . /var/www/html/
-
-# Set proper permissions
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html
-
-# Configure Apache
-RUN echo '<Directory /var/www/html>\n\
-    AllowOverride All\n\
-    Require all granted\n\
-</Directory>\n\
-\n\
-<FilesMatch \\.php$>\n\
-    SetHandler application/x-httpd-php\n\
-</FilesMatch>' > /etc/apache2/conf-available/docker-php.conf \
-    && a2enconf docker-php
-
-# Expose port 80
-EXPOSE 80
-
-# Start Apache
-CMD ["apache2-foreground"]
+# Set proper permissions (will be set by volume mount, but good for COPY scenarios)
+# RUN chown -R www-data:www-data /var/www/html \
+#     && chmod -R 755 /var/www/html

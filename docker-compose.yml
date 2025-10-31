@@ -1,13 +1,39 @@
-version: '3.8'
+version: "3.9"
 
 services:
   web:
-    build: .
-    ports:
-      - "8080:80"
-    volumes:
-      - .:/var/www/html
-    environment:
-      - APACHE_DOCUMENT_ROOT=/var/www/html
-    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: zdspgc-eims
+    ports:
+      - "0:80" # let Docker choose a free host port automatically
+    environment:
+      APP_ENV: development
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: zdspgc_db
+      DB_USERNAME: zdspgc_user
+      DB_PASSWORD: zdspgc_pass
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: zdspgc-mysql
+    command: ["--default-authentication-plugin=mysql_native_password"]
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: zdspgc_db
+      MYSQL_USER: zdspgc_user
+      MYSQL_PASSWORD: zdspgc_pass
+    ports:
+      - "3307:3306" # expose to host (optional)
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+
+volumes:
+  db_data:
