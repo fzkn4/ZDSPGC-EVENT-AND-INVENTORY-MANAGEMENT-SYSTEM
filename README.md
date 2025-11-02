@@ -1,46 +1,89 @@
 ## ZDSPGC Event & Inventory Management System - Local Setup
 
-### Prerequisites
+### Installation Options
+
+#### Option 1: Docker (Recommended for Development)
+
+**Prerequisites:**
 - Docker Desktop
 
-### Services
+**Services:**
 - Web: PHP 8.2 + Apache (with PDO MySQL)
 - DB: MySQL 8.0
 
-### Quick start
+**Quick start:**
 ```bash
 docker compose up -d --build
 ```
 
 Open: `http://localhost:8081` (change host port in `docker-compose.yml` if needed).
 
-Default admin (from seed):
-- Email/Username: `admin`
-- Password: `admin123`
-
-### Ports
+**Ports:**
 - Web: host `8081` → container `80`
 - MySQL: host `3307` → container `3306`
 
-If `8081` is busy on Windows, change it in `docker-compose.yml` (e.g., `8082:80`).
-
-### Environment
+**Environment:**
 App reads DB settings from env vars set in `docker-compose.yml` (`DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`). See `config.php`.
 
-### Database initialization
+**Database initialization:**
 The file `docker/mysql/init.sql` creates the `users` table and seeds a default admin. It only runs on first DB startup; to re-run, remove the `db_data` volume:
 ```bash
 docker compose down -v
 docker compose up -d --build
 ```
 
-### Common commands
+**Common commands:**
 ```bash
 docker compose logs -f web
 docker compose logs -f db
 docker compose exec web bash
 docker compose down
 ```
+
+---
+
+#### Option 2: XAMPP (Quick Setup)
+
+**Prerequisites:**
+- XAMPP (includes MySQL/MariaDB)
+
+**Setup Steps:**
+
+1. **Download & Install XAMPP**
+   - Download from [apachefriends.org](https://www.apachefriends.org/)
+   - Install to your preferred location
+
+2. **Start Services**
+   - Open XAMPP Control Panel
+   - Start **Apache** and **MySQL**
+
+3. **Copy Project Files**
+   - Copy this entire project folder to `C:\xampp\htdocs\` (or your XAMPP installation directory)
+   - Folder structure: `C:\xampp\htdocs\ZDSPGC-EVENT-AND-INVENTORY-MANAGEMENT-SYSTEM\`
+
+4. **Run Automatic Database Setup**
+   - Open browser and go to: `http://localhost/ZDSPGC-EVENT-AND-INVENTORY-MANAGEMENT-SYSTEM/setup.php`
+   - Enter your MySQL root password (usually blank for XAMPP)
+   - Click "Run Setup"
+   - Wait for success message
+
+5. **Access Application**
+   - Go to: `http://localhost/ZDSPGC-EVENT-AND-INVENTORY-MANAGEMENT-SYSTEM/login.php`
+   - Login with default credentials:
+     - **Username:** admin@example.com
+     - **Password:** admin123
+
+**⚠️ Security Note:** Delete `setup.php` after installation completes!
+
+---
+
+### Default Admin Credentials
+
+**After Setup:**
+- **Username:** admin@example.com
+- **Password:** admin123
+
+**⚠️ Please change this password immediately after first login!**
 
 # ZDSPGC Event & Inventory Management System
 

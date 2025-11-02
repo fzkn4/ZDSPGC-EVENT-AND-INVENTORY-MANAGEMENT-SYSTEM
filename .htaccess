@@ -7,6 +7,12 @@
     Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn-uicons.flaticon.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdn-uicons.flaticon.com; font-src 'self' https://fonts.gstatic.com https://cdn-uicons.flaticon.com; img-src 'self' data:; connect-src 'self';"
 </IfModule>
 
+# NOTE: Delete setup.php after initial setup for security
+# <Files "setup.php">
+#     Order allow,deny
+#     Deny from all
+# </Files>
+
 # Protect sensitive files
 <Files "data/users.json">
     Order allow,deny
