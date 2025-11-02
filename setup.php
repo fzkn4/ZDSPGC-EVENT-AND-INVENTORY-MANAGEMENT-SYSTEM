@@ -88,7 +88,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $setupSuccess = true;
         
     } catch (PDOException $e) {
-        $setupError = $e->getMessage();
+        $errorMsg = $e->getMessage();
+        
+        // Check for Aria corruption error
+        if (strpos($errorMsg, 'Aria') !== false || strpos($errorMsg, 'checksum') !== false) {
+            $setupError = $errorMsg;
+            $setupErrorDetails = [
+                'type' => 'aria_corruption',
+                'message' => 'Aria Storage Engine Corruption Detected!',
+                'description' => 'This error usually occurs when MariaDB shuts down improperly.',
+                'steps' => [
+                    'Stop MySQL in XAMPP Control Panel',
+                    'Open Command Prompt as Administrator',
+                    'Navigate to: <code>cd C:\\xampp\\mysql\\bin</code>',
+                    'Run: <code>mysqlcheck --all-databases --check --auto-repair -u root</code> (Press Enter if password is blank)',
+                    'Start MySQL again in XAMPP',
+                    'Try running setup.php again'
+                ]
+            ];
+        } else {
+            $setupError = $errorMsg;
+            $setupErrorDetails = null;
+        }
     }
 }
 ?>
@@ -171,8 +192,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <h2 class="card-title mb-3">Setup Failed</h2>
                                 <div class="alert alert-danger text-start">
                                     <strong>Error:</strong><br>
-                                    <?php echo htmlspecialchars($setupError); ?>
+                                    <code><?php echo htmlspecialchars($setupError); ?></code>
                                 </div>
+                                
+                                <?php if (isset($setupErrorDetails) && $setupErrorDetails['type'] === 'aria_corruption'): ?>
+                                <div class="alert alert-warning text-start mt-3">
+                                    <strong><i class="bi bi-exclamation-triangle me-2"></i><?php echo htmlspecialchars($setupErrorDetails['message']); ?></strong><br>
+                                    <p class="mb-2"><?php echo htmlspecialchars($setupErrorDetails['description']); ?></p>
+                                    <strong>Quick Fix Steps:</strong>
+                                    <ol class="mb-2">
+                                        <?php foreach ($setupErrorDetails['steps'] as $step): ?>
+                                        <li class="mb-1"><?php echo $step; ?></li>
+                                        <?php endforeach; ?>
+                                    </ol>
+                                    <small class="text-muted">See <code>fix-aria-corruption.md</code> for detailed instructions.</small>
+                                </div>
+                                <?php endif; ?>
+                                
                                 <button onclick="window.location.reload()" class="btn btn-primary">
                                     <i class="bi bi-arrow-clockwise me-2"></i>Try Again
                                 </button>
